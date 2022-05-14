@@ -34,7 +34,10 @@ func ReadSBVJ01File(path string) (*SBVJ01, error) {
 	reader := bufio.NewReader(file)
 
 	magic := make([]byte, 6)
-	reader.Read(magic)
+	_, err = reader.Read(magic)
+	if err != nil {
+		return nil, err
+	}
 
 	if string(magic) != "SBVJ01" {
 		return nil, errors.New("this is not a sbvj01 file")
@@ -51,7 +54,11 @@ func ReadSBVJ01File(path string) (*SBVJ01, error) {
 		sbvj.Versioned = false
 	} else {
 		sbvj.Versioned = true
-		binary.Read(reader, binary.LittleEndian, &sbvj.Version)
+		err = binary.Read(reader, binary.LittleEndian, &sbvj.Version)
+	}
+
+	if err != nil {
+		return nil, err
 	}
 
 	sbvj.Value, err = readToken(reader)
