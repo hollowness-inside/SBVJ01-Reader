@@ -98,7 +98,7 @@ func readToken(r *bufio.Reader) *SBVJ01Token {
 	case STRING:
 		token.Value = readString(r)
 	case LIST:
-		// token.Value = readList(r)
+		token.Value = readList(r)
 	case MAP:
 		// token.Value = readMap(r)
 	default:
@@ -121,4 +121,14 @@ func readBoolean(r *bufio.Reader) bool {
 	} else {
 		return true
 	}
+}
+
+func readList(r *bufio.Reader) []*SBVJ01Token {
+	size := readVarint(r)
+	list := make([]*SBVJ01Token, size)
+	for i := 0; i < size; i++ {
+		list[i] = readToken(r)
+	}
+
+	return list
 }
