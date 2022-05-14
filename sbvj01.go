@@ -1,0 +1,11 @@
+package sbvj01
+
+const (
+	NIL     = 0x01
+	DOUBLE  = 0x02
+	BOOLEAN = 0x03
+	VARINT  = 0x04
+	STRING  = 0x05
+	LIST    = 0x06
+	MAP     = 0x07
+)
