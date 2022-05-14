@@ -21,6 +21,12 @@ type SBVJ01 struct {
 	Name      string
 	Versioned bool
 	Version   int32
+	Value     SBVJ01Token
+}
+
+type SBVJ01Token struct {
+	Type  byte
+	Value any
 }
 
 func ReadSBVJ01File(path string) (*SBVJ01, error) {
