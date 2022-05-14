@@ -13,9 +13,9 @@ type SBVJ01Token struct {
 func (t SBVJ01Token) String() string {
 	if t.Type == NIL {
 		return "NIL"
-	}
-
-	if t.Type == MAP {
+	} else if t.Type == DOUBLE {
+		return fmt.Sprintf("%f", t.Value)
+	} else if t.Type == MAP {
 		mapValue := t.Value.([]*SBVJ01Pair)
 		elements := make([]string, len(mapValue))
 
@@ -28,8 +28,6 @@ func (t SBVJ01Token) String() string {
 
 	var typeStr string
 	switch t.Type {
-	case DOUBLE:
-		typeStr = "DOUBLE"
 	case BOOLEAN:
 		typeStr = "BOOLEAN"
 	case VARINT:
