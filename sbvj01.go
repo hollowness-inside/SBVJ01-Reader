@@ -92,7 +92,7 @@ func readToken(r *bufio.Reader) *SBVJ01Token {
 	case DOUBLE:
 		token.Value = readDouble(r)
 	case BOOLEAN:
-		// token.Value = readBoolean(r)
+		token.Value = readBoolean(r)
 	case VARINT:
 		token.Value = readVarint(r)
 	case STRING:
@@ -112,4 +112,13 @@ func readDouble(r *bufio.Reader) float64 {
 	var val float64
 	binary.Read(r, binary.LittleEndian, &val)
 	return val
+}
+
+func readBoolean(r *bufio.Reader) bool {
+	b, _ := r.ReadByte()
+	if b == 0 {
+		return false
+	} else {
+		return true
+	}
 }
