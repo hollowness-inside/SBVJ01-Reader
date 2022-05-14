@@ -7,6 +7,6 @@ type SBVJ01Pair struct {
 	Value *SBVJ01Token
 }
 
-func (p SBVJ01Pair) String() string {
+func (p *SBVJ01Pair) String() string {
 	return fmt.Sprintf("\"%s\": %v", p.Key, p.Value)
 }

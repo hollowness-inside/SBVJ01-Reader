@@ -128,15 +128,15 @@ func readList(r *bufio.Reader) []*SBVJ01Token {
 	return list
 }
 
-func readMap(r *bufio.Reader) []*SBVJ01Pair {
+func readMap(r *bufio.Reader) *SBVJ01Map {
 	size := readVarint(r)
-	list := make([]*SBVJ01Pair, size)
+	sbvjmap := NewSBVJ01Map(size)
 	for i := 0; i < size; i++ {
 		pair := new(SBVJ01Pair)
 		pair.Key = readString(r)
 		pair.Value = readToken(r)
-		list[i] = pair
+		sbvjmap.Items[i] = pair
 	}
 
-	return list
+	return sbvjmap
 }

@@ -2,7 +2,6 @@ package sbvj01
 
 import (
 	"fmt"
-	"strings"
 )
 
 type SBVJ01Token struct {
@@ -10,7 +9,7 @@ type SBVJ01Token struct {
 	Value any
 }
 
-func (t SBVJ01Token) String() string {
+func (t *SBVJ01Token) String() string {
 	switch t.Type {
 	case NIL:
 		return "nil"
@@ -25,14 +24,7 @@ func (t SBVJ01Token) String() string {
 	case LIST:
 		return fmt.Sprintf("%v", t.Value)
 	case MAP:
-		mapValue := t.Value.([]*SBVJ01Pair)
-		elements := make([]string, len(mapValue))
-
-		for i, v := range mapValue {
-			elements[i] = v.String()
-		}
-
-		return "{" + strings.Join(elements, ", ") + "}"
+		return t.Value.(*SBVJ01Map).String()
 	}
 
 	return ""
