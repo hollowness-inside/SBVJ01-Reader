@@ -2,6 +2,7 @@ package sbvj01
 
 import (
 	"bufio"
+	"errors"
 	"os"
 )
 
@@ -29,4 +30,11 @@ func ReadSBVJ01File(path string) (*SBVJ01, error) {
 	defer file.Close()
 
 	reader := bufio.NewReader(file)
+
+	magic := make([]byte, 6)
+	reader.Read(magic)
+
+	if string(magic) != "SBVJ01" {
+		return nil, errors.New("this is not a sbvj01 file")
+	}
 }
