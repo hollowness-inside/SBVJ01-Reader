@@ -9,7 +9,7 @@ type SBVJ01Token struct {
 	Value any
 }
 
-func (t *SBVJ01Token) String() string {
+func (t SBVJ01Token) String() string {
 	switch t.Type {
 	case NIL:
 		return "nil"

@@ -21,7 +21,7 @@ type SBVJ01 struct {
 	Name      string
 	Versioned bool
 	Version   int32
-	Value     *SBVJ01Token
+	Value     SBVJ01Token
 }
 
 func ReadSBVJ01File(path string) (*SBVJ01, error) {
@@ -74,7 +74,7 @@ func readVarint(r *bufio.Reader) int {
 	return int(v)
 }
 
-func readToken(r *bufio.Reader) *SBVJ01Token {
+func readToken(r *bufio.Reader) SBVJ01Token {
 	token := new(SBVJ01Token)
 
 	token.Type, _ = r.ReadByte()
@@ -94,11 +94,9 @@ func readToken(r *bufio.Reader) *SBVJ01Token {
 		token.Value = readList(r)
 	case MAP:
 		token.Value = readMap(r)
-	default:
-		return nil
 	}
 
-	return token
+	return *token
 }
 
 func readDouble(r *bufio.Reader) float64 {
@@ -130,7 +128,7 @@ func readMap(r *bufio.Reader) *SBVJ01Map {
 	size := readVarint(r)
 	sbvjmap := NewSBVJ01Map(size)
 	for i := 0; i < size; i++ {
-		sbvjmap.Items[i] = &SBVJ01Pair{
+		sbvjmap.Items[i] = SBVJ01Pair{
 			Key:   readString(r),
 			Value: readToken(r),
 		}

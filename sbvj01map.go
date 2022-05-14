@@ -3,10 +3,10 @@ package sbvj01
 import "strings"
 
 type SBVJ01Map struct {
-	Items []*SBVJ01Pair
+	Items []SBVJ01Pair
 }
 
-func (m *SBVJ01Map) String() string {
+func (m SBVJ01Map) String() string {
 	elements := make([]string, len(m.Items))
 
 	for i, v := range m.Items {
@@ -19,7 +19,7 @@ func (m *SBVJ01Map) String() string {
 func (m *SBVJ01Map) Get(key string) *SBVJ01Token {
 	for _, it := range m.Items {
 		if it.Key == key {
-			return it.Value
+			return &it.Value
 		}
 	}
 
@@ -28,6 +28,6 @@ func (m *SBVJ01Map) Get(key string) *SBVJ01Token {
 
 func NewSBVJ01Map(size int) *SBVJ01Map {
 	smap := new(SBVJ01Map)
-	smap.Items = make([]*SBVJ01Pair, size)
+	smap.Items = make([]SBVJ01Pair, size)
 	return smap
 }
