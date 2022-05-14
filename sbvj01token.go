@@ -23,7 +23,7 @@ func (t SBVJ01Token) String() string {
 	case STRING:
 		return fmt.Sprintf("\"%s\"", t.Value.(string))
 	case LIST:
-		// typeStr = "LIST"
+		return fmt.Sprintf("%v", t.Value)
 	case MAP:
 		mapValue := t.Value.([]*SBVJ01Pair)
 		elements := make([]string, len(mapValue))
