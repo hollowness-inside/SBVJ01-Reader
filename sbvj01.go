@@ -24,16 +24,6 @@ type SBVJ01 struct {
 	Value     *SBVJ01Token
 }
 
-type SBVJ01Token struct {
-	Type  byte
-	Value any
-}
-
-type SBVJ01Pair struct {
-	Key   string
-	Value *SBVJ01Token
-}
-
 func ReadSBVJ01File(path string) (*SBVJ01, error) {
 	file, err := os.Open(path)
 	if err != nil {
