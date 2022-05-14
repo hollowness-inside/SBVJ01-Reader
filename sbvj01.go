@@ -29,6 +29,11 @@ type SBVJ01Token struct {
 	Value any
 }
 
+type SBVJ01Pair struct {
+	Key   string
+	Value *SBVJ01Token
+}
+
 func ReadSBVJ01File(path string) (*SBVJ01, error) {
 	file, err := os.Open(path)
 	if err != nil {
@@ -100,7 +105,7 @@ func readToken(r *bufio.Reader) *SBVJ01Token {
 	case LIST:
 		token.Value = readList(r)
 	case MAP:
-		// token.Value = readMap(r)
+		token.Value = readMap(r)
 	default:
 		return nil
 	}
@@ -128,6 +133,19 @@ func readList(r *bufio.Reader) []*SBVJ01Token {
 	list := make([]*SBVJ01Token, size)
 	for i := 0; i < size; i++ {
 		list[i] = readToken(r)
+	}
+
+	return list
+}
+
+func readMap(r *bufio.Reader) []*SBVJ01Pair {
+	size := readVarint(r)
+	list := make([]*SBVJ01Pair, size)
+	for i := 0; i < size; i++ {
+		pair := new(SBVJ01Pair)
+		pair.Key = readString(r)
+		pair.Value = readToken(r)
+		list[i] = pair
 	}
 
 	return list
