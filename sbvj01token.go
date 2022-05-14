@@ -14,7 +14,9 @@ func (t SBVJ01Token) String() string {
 	if t.Type == NIL {
 		return "NIL"
 	} else if t.Type == DOUBLE {
-		return fmt.Sprintf("%f", t.Value)
+		return fmt.Sprintf("%f", t.Value.(float64))
+	} else if t.Type == BOOLEAN {
+		return fmt.Sprintf("%t", t.Value.(bool))
 	} else if t.Type == MAP {
 		mapValue := t.Value.([]*SBVJ01Pair)
 		elements := make([]string, len(mapValue))
@@ -28,8 +30,6 @@ func (t SBVJ01Token) String() string {
 
 	var typeStr string
 	switch t.Type {
-	case BOOLEAN:
-		typeStr = "BOOLEAN"
 	case VARINT:
 		typeStr = "VARINT"
 	case STRING:
