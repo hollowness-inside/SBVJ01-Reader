@@ -24,7 +24,7 @@ func (t SBVJ01Token) String() string {
 	case LIST:
 		return fmt.Sprintf("%v", t.Value)
 	case MAP:
-		return t.Value.(*SBVJ01Map).String()
+		return t.Value.(SBVJ01Map).String()
 	}
 
 	return ""

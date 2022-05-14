@@ -26,8 +26,8 @@ func (m *SBVJ01Map) Get(key string) *SBVJ01Token {
 	return nil
 }
 
-func NewSBVJ01Map(size int) *SBVJ01Map {
-	smap := new(SBVJ01Map)
+func NewSBVJ01Map(size int) SBVJ01Map {
+	smap := SBVJ01Map{}
 	smap.Items = make([]SBVJ01Pair, size)
 	return smap
 }
