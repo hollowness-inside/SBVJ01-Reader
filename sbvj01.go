@@ -21,7 +21,7 @@ type SBVJ01 struct {
 	Name      string
 	Versioned bool
 	Version   int32
-	Value     SBVJ01Token
+	Value     *SBVJ01Token
 }
 
 type SBVJ01Token struct {
@@ -90,7 +90,7 @@ func readToken(r *bufio.Reader) *SBVJ01Token {
 	case NIL:
 		token.Value = nil
 	case DOUBLE:
-		// token.Value = readDouble(r)
+		token.Value = readDouble(r)
 	case BOOLEAN:
 		// token.Value = readBoolean(r)
 	case VARINT:
@@ -106,4 +106,10 @@ func readToken(r *bufio.Reader) *SBVJ01Token {
 	}
 
 	return token
+}
+
+func readDouble(r *bufio.Reader) float64 {
+	var val float64
+	binary.Read(r, binary.LittleEndian, &val)
+	return val
 }
