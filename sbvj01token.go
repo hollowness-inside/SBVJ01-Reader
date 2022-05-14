@@ -21,7 +21,7 @@ func (t SBVJ01Token) String() string {
 	case VARINT:
 		return fmt.Sprintf("%d", t.Value.(int))
 	case STRING:
-		// typeStr = "STRING"
+		return fmt.Sprintf("\"%s\"", t.Value.(string))
 	case LIST:
 		// typeStr = "LIST"
 	case MAP:
