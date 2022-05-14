@@ -71,8 +71,7 @@ func readBytes(r *bufio.Reader) []byte {
 }
 
 func readVarint(r *bufio.Reader) int {
-	// TODO: Supposed to read VLQ, not a byte
-	v, _ := r.ReadByte()
+	v, _ := binary.ReadUvarint(r)
 	return int(v)
 }
 
