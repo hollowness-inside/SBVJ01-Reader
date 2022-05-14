@@ -41,7 +41,6 @@ func ReadSBVJ01File(path string) (*SBVJ01, error) {
 	}
 
 	sbvj := new(SBVJ01)
-
 	sbvj.Name = readString(reader)
 
 	versioned, _ := reader.ReadByte()
@@ -117,11 +116,11 @@ func readBoolean(r *bufio.Reader) bool {
 	}
 }
 
-func readList(r *bufio.Reader) []*SBVJ01Token {
+func readList(r *bufio.Reader) *SBVJ01List {
 	size := readVarint(r)
-	list := make([]*SBVJ01Token, size)
+	list := NewSBVJ01List(size)
 	for i := 0; i < size; i++ {
-		list[i] = readToken(r)
+		list.Items[i] = readToken(r)
 	}
 
 	return list
@@ -131,10 +130,10 @@ func readMap(r *bufio.Reader) *SBVJ01Map {
 	size := readVarint(r)
 	sbvjmap := NewSBVJ01Map(size)
 	for i := 0; i < size; i++ {
-		pair := new(SBVJ01Pair)
-		pair.Key = readString(r)
-		pair.Value = readToken(r)
-		sbvjmap.Items[i] = pair
+		sbvjmap.Items[i] = &SBVJ01Pair{
+			Key:   readString(r),
+			Value: readToken(r),
+		}
 	}
 
 	return sbvjmap
