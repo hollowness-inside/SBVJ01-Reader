@@ -12,7 +12,7 @@ func (l *SBVJ01List) String() string {
 		strs[i] = v.String()
 	}
 
-	return strings.Join(strs, ", ")
+	return "[" + strings.Join(strs, ", ") + "]"
 }
 
 func (l *SBVJ01List) Get(n int) *SBVJ01Token {
