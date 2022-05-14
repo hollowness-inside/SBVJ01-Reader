@@ -8,5 +8,5 @@ type SBVJ01Pair struct {
 }
 
 func (p SBVJ01Pair) String() string {
-	return fmt.Sprintf("{%s = %v}", p.Key, p.Value)
+	return fmt.Sprintf("\"%s\": %v", p.Key, p.Value)
 }

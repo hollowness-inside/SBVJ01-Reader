@@ -1,6 +1,9 @@
 package sbvj01
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type SBVJ01Token struct {
 	Type  byte
@@ -10,6 +13,17 @@ type SBVJ01Token struct {
 func (t SBVJ01Token) String() string {
 	if t.Type == NIL {
 		return "NIL"
+	}
+
+	if t.Type == MAP {
+		mapValue := t.Value.([]*SBVJ01Pair)
+		elements := make([]string, len(mapValue))
+
+		for i, v := range mapValue {
+			elements[i] = v.String()
+		}
+
+		return "{" + strings.Join(elements, ", ") + "}"
 	}
 
 	var typeStr string
@@ -24,8 +38,7 @@ func (t SBVJ01Token) String() string {
 		typeStr = "STRING"
 	case LIST:
 		typeStr = "LIST"
-	case MAP:
-		typeStr = "MAP"
 	}
+
 	return fmt.Sprintf("%s(%v)", typeStr, t.Value)
 }
