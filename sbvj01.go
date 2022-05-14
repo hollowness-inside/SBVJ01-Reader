@@ -56,6 +56,10 @@ func ReadSBVJ01File(path string) (*SBVJ01, error) {
 		sbvj.Versioned = true
 		binary.Read(reader, binary.LittleEndian, &sbvj.Version)
 	}
+
+	sbvj.Value = readToken(reader)
+
+	return sbvj, nil
 }
 
 func readString(r *bufio.Reader) string {
@@ -75,4 +79,31 @@ func readVarint(r *bufio.Reader) int {
 	// TODO: Supposed to read VLQ, not a byte
 	v, _ := r.ReadByte()
 	return int(v)
+}
+
+func readToken(r *bufio.Reader) *SBVJ01Token {
+	token := new(SBVJ01Token)
+
+	token.Type, _ = r.ReadByte()
+
+	switch token.Type {
+	case NIL:
+		token.Value = nil
+	case DOUBLE:
+		// token.Value = readDouble(r)
+	case BOOLEAN:
+		// token.Value = readBoolean(r)
+	case VARINT:
+		token.Value = readVarint(r)
+	case STRING:
+		token.Value = readString(r)
+	case LIST:
+		// token.Value = readList(r)
+	case MAP:
+		// token.Value = readMap(r)
+	default:
+		return nil
+	}
+
+	return token
 }
