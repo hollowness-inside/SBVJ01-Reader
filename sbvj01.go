@@ -40,21 +40,17 @@ func ReadSBVJ01File(path string) SBVJ01 {
 	if err != nil {
 		panic(err)
 	}
+
 	if n != 6 {
 		panic("Cannot read magic")
 	}
+
 	if string(magic) != "SBVJ01" {
 		panic("Wrong magic")
 	}
 
 	sbvj := SBVJ01{}
-	size := readByte(reader)
-	buffer := make([]byte, size)
-	n, err = reader.Read(buffer)
-	if n != int(size) || err != nil {
-		panic(err)
-	}
-	sbvj.Name = string(buffer)
+	sbvj.Name = readString(reader)
 
 	if readByte(reader) == 0 {
 		sbvj.Versioned = false
@@ -86,16 +82,11 @@ func readString(r *bufio.Reader) string {
 
 func readBytes(r *bufio.Reader) []byte {
 	size := readVarint(r)
-
 	bytes := make([]byte, size)
+
 	var i int64 = 0
 	for i < size {
-		b, err := r.ReadByte()
-		if err != nil {
-			panic(err)
-		}
-
-		bytes[i] = b
+		bytes[i] = readByte(r)
 		i += 1
 	}
 
