@@ -7,14 +7,16 @@ import (
 	"os"
 )
 
+type SBVJ01Type byte
+
 const (
-	NIL     = 0x01
-	DOUBLE  = 0x02
-	BOOLEAN = 0x03
-	VARINT  = 0x04
-	STRING  = 0x05
-	LIST    = 0x06
-	MAP     = 0x07
+	NIL     SBVJ01Type = 0x01
+	DOUBLE  SBVJ01Type = 0x02
+	BOOLEAN SBVJ01Type = 0x03
+	VARINT  SBVJ01Type = 0x04
+	STRING  SBVJ01Type = 0x05
+	LIST    SBVJ01Type = 0x06
+	MAP     SBVJ01Type = 0x07
 )
 
 type SBVJ01 struct {
@@ -43,7 +45,7 @@ func ReadSBVJ01File(path string) (*SBVJ01, error) {
 		return nil, errors.New("this is not a sbvj01 file")
 	}
 
-	sbvj := new(SBVJ01)
+	sbvj := SBVJ01{}
 	sbvj.Name, err = readString(reader)
 	if err != nil {
 		return nil, err
@@ -66,7 +68,7 @@ func ReadSBVJ01File(path string) (*SBVJ01, error) {
 		return nil, err
 	}
 
-	return sbvj, nil
+	return &sbvj, nil
 }
 
 func readString(r *bufio.Reader) (string, error) {
@@ -102,10 +104,13 @@ func readVarint(r *bufio.Reader) (int, error) {
 func readToken(r *bufio.Reader) (SBVJ01Token, error) {
 	token := SBVJ01Token{}
 
-	token.Type, _ = r.ReadByte()
+	tp, err := r.ReadByte()
+	if err != nil {
+		return token, err
+	}
+	token.Type = SBVJ01Type(tp)
 
 	var value any
-	var err error
 	switch token.Type {
 	case NIL:
 		token.Value = nil

@@ -5,7 +5,7 @@ import (
 )
 
 type SBVJ01Token struct {
-	Type  byte
+	Type  SBVJ01Type
 	Value any
 }
 
