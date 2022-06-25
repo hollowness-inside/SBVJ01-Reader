@@ -3,7 +3,6 @@ package sbvj01
 import (
 	"bufio"
 	"encoding/binary"
-	"errors"
 	"os"
 )
 
@@ -26,32 +25,32 @@ type SBVJ01 struct {
 	Value     SBVJ01Token
 }
 
-func ReadSBVJ01File(path string) (*SBVJ01, error) {
+func ReadSBVJ01File(path string) *SBVJ01 {
 	file, err := os.Open(path)
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 	defer file.Close()
 
 	reader := bufio.NewReader(file)
 
 	magic := make([]byte, 6)
-	_, err = reader.Read(magic)
+	n, err := reader.Read(magic)
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
-
+	if n != 6 {
+		panic("Cannot read magic")
+	}
 	if string(magic) != "SBVJ01" {
-		return nil, errors.New("this is not a sbvj01 file")
+		panic("Wrong magic")
 	}
 
 	sbvj := SBVJ01{}
-	sbvj.Name, err = readString(reader)
-	if err != nil {
-		return nil, err
-	}
+	sbvj.Name = readString(reader)
 
-	versioned, _ := reader.ReadByte()
+	versioned := readByte(reader)
+
 	if versioned == 0 {
 		sbvj.Versioned = false
 	} else {
@@ -59,146 +58,120 @@ func ReadSBVJ01File(path string) (*SBVJ01, error) {
 		err = binary.Read(reader, binary.LittleEndian, &sbvj.Version)
 	}
 
-	if err != nil {
-		return nil, err
-	}
-
-	sbvj.Value, err = readToken(reader)
-	if err != nil {
-		return nil, err
-	}
-
-	return &sbvj, nil
+	sbvj.Value = readToken(reader)
+	return &sbvj
 }
 
-func readString(r *bufio.Reader) (string, error) {
-	bytes, err := readBytes(r)
+func readByte(r *bufio.Reader) byte {
+	b, err := r.ReadByte()
 	if err != nil {
-		return "", err
+		panic(err)
 	}
 
-	return string(bytes), nil
+	return b
 }
 
-func readBytes(r *bufio.Reader) ([]byte, error) {
-	size, err := readVarint(r)
-	if err != nil {
-		return nil, err
-	}
+func readString(r *bufio.Reader) string {
+	bytes := readBytes(r)
+	return string(bytes)
+}
+
+func readBytes(r *bufio.Reader) []byte {
+	size := readVarint(r)
 
 	bytes := make([]byte, size)
-	r.Read(bytes)
-
-	return bytes, nil
-}
-
-func readVarint(r *bufio.Reader) (int, error) {
-	v, err := binary.ReadUvarint(r)
+	n, err := r.Read(bytes)
 	if err != nil {
-		return 0, err
+		panic(err)
 	}
 
-	return int(v), nil
+	if int64(n) != size {
+		panic("Cannot read the needed amount of data")
+	}
+
+	return bytes
 }
 
-func readToken(r *bufio.Reader) (SBVJ01Token, error) {
+func readVarint(r *bufio.Reader) int64 {
+	v, err := binary.ReadVarint(r)
+	if err != nil {
+		panic(err)
+	}
+
+	return v
+}
+
+func readToken(r *bufio.Reader) SBVJ01Token {
 	token := SBVJ01Token{}
 
-	tp, err := r.ReadByte()
-	if err != nil {
-		return token, err
-	}
+	tp := readByte(r)
 	token.Type = SBVJ01Type(tp)
 
-	var value any
 	switch token.Type {
 	case NIL:
 		token.Value = nil
 	case DOUBLE:
-		value, err = readDouble(r)
+		token.Value = readDouble(r)
 	case BOOLEAN:
-		value, err = readBoolean(r)
+		token.Value = readBoolean(r)
 	case VARINT:
-		value, err = readVarint(r)
+		token.Value = readVarint(r)
 	case STRING:
-		value, err = readString(r)
+		token.Value = readString(r)
 	case LIST:
-		value, err = readList(r)
+		token.Value = readList(r)
 	case MAP:
-		value, err = readMap(r)
+		token.Value = readMap(r)
 	}
 
-	if err != nil {
-		return token, err
-	}
-
-	token.Value = value
-
-	return token, nil
+	return token
 }
 
-func readDouble(r *bufio.Reader) (float64, error) {
+func readDouble(r *bufio.Reader) float64 {
 	var val float64
 	err := binary.Read(r, binary.LittleEndian, &val)
 	if err != nil {
-		return 0, err
+		panic(err)
 	}
 
-	return val, nil
+	return val
 }
 
-func readBoolean(r *bufio.Reader) (bool, error) {
-	b, err := r.ReadByte()
-	if err != nil {
-		return false, err
-	}
-
-	if b == 0 {
-		return false, nil
+func readBoolean(r *bufio.Reader) bool {
+	if readByte(r) == 0 {
+		return false
 	} else {
-		return true, nil
+		return true
 	}
 }
 
-func readList(r *bufio.Reader) (SBVJ01List, error) {
-	size, err := readVarint(r)
-	if err != nil {
-		return SBVJ01List{}, err
+func readList(r *bufio.Reader) SBVJ01List {
+	sbvjList := SBVJ01List{}
+
+	size := readVarint(r)
+	sbvjList.Items = make([]SBVJ01Token, size)
+
+	var i int64
+	for i = 0; i < size; i++ {
+		token := readToken(r)
+		sbvjList.Items[i] = token
 	}
 
-	list := NewSBVJ01List(size)
-	for i := 0; i < size; i++ {
-		token, err := readToken(r)
-		if err != nil {
-			return list, err
-		}
-
-		list.Items[i] = token
-	}
-
-	return list, nil
+	return sbvjList
 }
 
-func readMap(r *bufio.Reader) (SBVJ01Map, error) {
-	size, err := readVarint(r)
-	if err != nil {
-		return SBVJ01Map{}, err
-	}
+func readMap(r *bufio.Reader) SBVJ01Map {
+	sbvjmap := SBVJ01Map{}
 
-	sbvjmap := NewSBVJ01Map(size)
-	for i := 0; i < size; i++ {
-		key, err := readString(r)
-		if err != nil {
-			return sbvjmap, err
-		}
+	size := readVarint(r)
+	sbvjmap.Items = make([]SBVJ01Pair, size)
 
-		value, err := readToken(r)
-		if err != nil {
-			return sbvjmap, err
-		}
-
+	var i int64
+	for i = 0; i < size; i++ {
+		key := readString(r)
+		value := readToken(r)
 		sbvjmap.Items[i] = SBVJ01Pair{key, value}
 	}
 
-	return sbvjmap, nil
+	return sbvjmap
 }
