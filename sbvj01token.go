@@ -12,7 +12,7 @@ type SBVJ01Token struct {
 func (t SBVJ01Token) String() string {
 	switch t.Type {
 	case NIL:
-		return "nil"
+		return "null"
 	case DOUBLE:
 		return fmt.Sprintf("%f", t.Value.(float64))
 	case BOOLEAN:
@@ -22,10 +22,10 @@ func (t SBVJ01Token) String() string {
 	case STRING:
 		return fmt.Sprintf(`"%s"`, t.Value.(string))
 	case LIST:
-		return fmt.Sprintf("%v", t.Value)
+		return t.Value.(SBVJ01List).String()
 	case MAP:
 		return t.Value.(SBVJ01Map).String()
+	default:
+		return ""
 	}
-
-	return ""
 }

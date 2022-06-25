@@ -1,6 +1,9 @@
 package sbvj01
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type SBVJ01List struct {
 	Items []SBVJ01Token
@@ -12,7 +15,7 @@ func (l SBVJ01List) String() string {
 		strs[i] = v.String()
 	}
 
-	return "[" + strings.Join(strs, ", ") + "]"
+	return fmt.Sprintf("[%s]", strings.Join(strs, ", "))
 }
 
 func (l *SBVJ01List) Get(n int) *SBVJ01Token {
