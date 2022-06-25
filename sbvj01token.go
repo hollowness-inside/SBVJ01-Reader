@@ -18,9 +18,9 @@ func (t SBVJ01Token) String() string {
 	case BOOLEAN:
 		return fmt.Sprintf("%t", t.Value.(bool))
 	case VARINT:
-		return fmt.Sprintf("%d", t.Value.(int))
+		return fmt.Sprintf("%d", t.Value.(int64))
 	case STRING:
-		return fmt.Sprintf("\"%s\"", t.Value.(string))
+		return fmt.Sprintf(`"%s"`, t.Value.(string))
 	case LIST:
 		return fmt.Sprintf("%v", t.Value)
 	case MAP:
