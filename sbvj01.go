@@ -3,6 +3,7 @@ package sbvj01
 import (
 	"bufio"
 	"encoding/binary"
+	"fmt"
 	"os"
 )
 
@@ -25,7 +26,7 @@ type SBVJ01 struct {
 	Value     SBVJ01Token
 }
 
-func ReadSBVJ01File(path string) *SBVJ01 {
+func ReadSBVJ01File(path string) SBVJ01 {
 	file, err := os.Open(path)
 	if err != nil {
 		panic(err)
@@ -47,19 +48,26 @@ func ReadSBVJ01File(path string) *SBVJ01 {
 	}
 
 	sbvj := SBVJ01{}
-	sbvj.Name = readString(reader)
+	size := readByte(reader)
+	buffer := make([]byte, size)
+	n, err = reader.Read(buffer)
+	if n != int(size) || err != nil {
+		panic(err)
+	}
+	sbvj.Name = string(buffer)
 
-	versioned := readByte(reader)
-
-	if versioned == 0 {
+	if readByte(reader) == 0 {
 		sbvj.Versioned = false
 	} else {
 		sbvj.Versioned = true
-		err = binary.Read(reader, binary.LittleEndian, &sbvj.Version)
+		err := binary.Read(reader, binary.BigEndian, &sbvj.Version)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	sbvj.Value = readToken(reader)
-	return &sbvj
+	return sbvj
 }
 
 func readByte(r *bufio.Reader) byte {
@@ -80,25 +88,44 @@ func readBytes(r *bufio.Reader) []byte {
 	size := readVarint(r)
 
 	bytes := make([]byte, size)
-	n, err := r.Read(bytes)
-	if err != nil {
-		panic(err)
-	}
+	var i int64 = 0
+	for i < size {
+		b, err := r.ReadByte()
+		if err != nil {
+			panic(err)
+		}
 
-	if int64(n) != size {
-		panic("Cannot read the needed amount of data")
+		bytes[i] = b
+		i += 1
 	}
 
 	return bytes
 }
 
 func readVarint(r *bufio.Reader) int64 {
-	v, err := binary.ReadVarint(r)
-	if err != nil {
-		panic(err)
+	var value int64
+	for {
+		b, err := r.ReadByte()
+		if err != nil {
+			panic(err)
+		}
+
+		if b&0b10000000 == 0 {
+			value = value<<7 | int64(b)
+			return value
+		}
+		value = value<<7 | (int64(b) & 0b01111111)
+	}
+}
+
+func readSignedVarint(r *bufio.Reader) int64 {
+	v := readVarint(r)
+
+	if v&1 != 0 {
+		return -(v >> 1) - 1
 	}
 
-	return v
+	return v >> 1
 }
 
 func readToken(r *bufio.Reader) SBVJ01Token {
@@ -115,13 +142,15 @@ func readToken(r *bufio.Reader) SBVJ01Token {
 	case BOOLEAN:
 		token.Value = readBoolean(r)
 	case VARINT:
-		token.Value = readVarint(r)
+		token.Value = readSignedVarint(r)
 	case STRING:
 		token.Value = readString(r)
 	case LIST:
 		token.Value = readList(r)
 	case MAP:
 		token.Value = readMap(r)
+	default:
+		panic(fmt.Sprintf("Unknown token type %d", token.Type))
 	}
 
 	return token

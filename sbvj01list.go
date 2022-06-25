@@ -18,9 +18,3 @@ func (l SBVJ01List) String() string {
 func (l *SBVJ01List) Get(n int) *SBVJ01Token {
 	return &l.Items[n]
 }
-
-func NewSBVJ01List(size int) SBVJ01List {
-	list := SBVJ01List{}
-	list.Items = make([]SBVJ01Token, size)
-	return list
-}
