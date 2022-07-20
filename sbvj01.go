@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/binary"
 	"fmt"
+	"io"
 	"os"
 )
 
@@ -34,7 +35,6 @@ func ReadSBVJ01File(path string) SBVJ01 {
 	defer file.Close()
 
 	reader := bufio.NewReader(file)
-
 	magic := make([]byte, 6)
 	n, err := reader.Read(magic)
 	if err != nil {
@@ -83,11 +83,9 @@ func readString(r *bufio.Reader) string {
 func readBytes(r *bufio.Reader) []byte {
 	size := readVarint(r)
 	bytes := make([]byte, size)
-
-	var i int64 = 0
-	for i < size {
-		bytes[i] = readByte(r)
-		i += 1
+	_, err := io.ReadFull(r, bytes)
+	if err != nil {
+		panic(err)
 	}
 
 	return bytes
