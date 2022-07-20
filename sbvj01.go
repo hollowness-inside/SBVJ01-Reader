@@ -34,19 +34,16 @@ func ReadSBVJ01File(path string) SBVJ01 {
 	}
 	defer file.Close()
 
-	reader := bufio.NewReader(file)
-	return Read(reader)
+	return Read(file)
 }
 
-func Read(reader *bufio.Reader) SBVJ01 {
+func Read(r io.Reader) SBVJ01 {
+	reader := bufio.NewReader(r)
+
 	magic := make([]byte, 6)
-	n, err := reader.Read(magic)
+	_, err := io.ReadFull(reader, magic)
 	if err != nil {
 		panic(err)
-	}
-
-	if n != 6 {
-		panic("Cannot read magic")
 	}
 
 	if string(magic) != "SBVJ01" {
