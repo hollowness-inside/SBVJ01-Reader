@@ -1,15 +1,15 @@
-package sbvj01
+package sbvj
 
 import (
 	"fmt"
 	"strings"
 )
 
-type SBVJ01Map struct {
-	Items []SBVJ01Pair
+type SBVJMap struct {
+	Items []SBVJPair
 }
 
-func (m *SBVJ01Map) Get(key string) *SBVJ01Token {
+func (m *SBVJMap) Get(key string) *SBVJToken {
 	for _, it := range m.Items {
 		if it.Key == key {
 			return &it.Value
@@ -19,7 +19,7 @@ func (m *SBVJ01Map) Get(key string) *SBVJ01Token {
 	return nil
 }
 
-func (m SBVJ01Map) String() string {
+func (m SBVJMap) String() string {
 	elements := make([]string, len(m.Items))
 
 	for i, v := range m.Items {

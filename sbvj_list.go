@@ -1,19 +1,19 @@
-package sbvj01
+package sbvj
 
 import (
 	"fmt"
 	"strings"
 )
 
-type SBVJ01List struct {
-	Items []SBVJ01Token
+type SBVJList struct {
+	Items []SBVJToken
 }
 
-func (l *SBVJ01List) Get(n int) *SBVJ01Token {
+func (l *SBVJList) Get(n int) *SBVJToken {
 	return &l.Items[n]
 }
 
-func (l SBVJ01List) String() string {
+func (l SBVJList) String() string {
 	strs := make([]string, len(l.Items))
 	for i, v := range l.Items {
 		strs[i] = v.String()

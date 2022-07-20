@@ -1,15 +1,15 @@
-package sbvj01
+package sbvj
 
 import (
 	"fmt"
 )
 
-type SBVJ01Token struct {
-	Type  SBVJ01Type
+type SBVJToken struct {
+	Type  SBVJType
 	Value any
 }
 
-func (t SBVJ01Token) String() string {
+func (t SBVJToken) String() string {
 	switch t.Type {
 	case NIL:
 		return "null"
@@ -22,9 +22,9 @@ func (t SBVJ01Token) String() string {
 	case STRING:
 		return fmt.Sprintf(`"%s"`, t.Value.(string))
 	case LIST:
-		return t.Value.(SBVJ01List).String()
+		return t.Value.(SBVJList).String()
 	case MAP:
-		return t.Value.(SBVJ01Map).String()
+		return t.Value.(SBVJMap).String()
 	default:
 		return ""
 	}

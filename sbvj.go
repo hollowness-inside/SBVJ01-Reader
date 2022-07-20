@@ -1,4 +1,4 @@
-package sbvj01
+package sbvj
 
 import (
 	"bufio"
@@ -8,26 +8,26 @@ import (
 	"os"
 )
 
-type SBVJ01Type byte
+type SBVJType byte
 
 const (
-	NIL     SBVJ01Type = 0x01
-	DOUBLE  SBVJ01Type = 0x02
-	BOOLEAN SBVJ01Type = 0x03
-	VARINT  SBVJ01Type = 0x04
-	STRING  SBVJ01Type = 0x05
-	LIST    SBVJ01Type = 0x06
-	MAP     SBVJ01Type = 0x07
+	NIL     SBVJType = 0x01
+	DOUBLE  SBVJType = 0x02
+	BOOLEAN SBVJType = 0x03
+	VARINT  SBVJType = 0x04
+	STRING  SBVJType = 0x05
+	LIST    SBVJType = 0x06
+	MAP     SBVJType = 0x07
 )
 
-type SBVJ01 struct {
+type SBVJ struct {
 	Name      string
 	Versioned bool
 	Version   int32
-	Value     SBVJ01Token
+	Value     SBVJToken
 }
 
-func ReadSBVJ01File(path string) SBVJ01 {
+func ReadSBVJFile(path string) SBVJ {
 	file, err := os.Open(path)
 	if err != nil {
 		panic(err)
@@ -37,7 +37,7 @@ func ReadSBVJ01File(path string) SBVJ01 {
 	return Read(file)
 }
 
-func Read(r io.Reader) SBVJ01 {
+func Read(r io.Reader) SBVJ {
 	reader := bufio.NewReader(r)
 
 	magic := make([]byte, 6)
@@ -50,7 +50,7 @@ func Read(r io.Reader) SBVJ01 {
 		panic("Wrong magic")
 	}
 
-	sbvj := SBVJ01{}
+	sbvj := SBVJ{}
 	sbvj.Name = readString(reader)
 
 	if readByte(reader) == 0 {
@@ -118,11 +118,11 @@ func readSignedVarint(r *bufio.Reader) int64 {
 	return v >> 1
 }
 
-func readToken(r *bufio.Reader) SBVJ01Token {
-	token := SBVJ01Token{}
+func readToken(r *bufio.Reader) SBVJToken {
+	token := SBVJToken{}
 
 	tp := readByte(r)
-	token.Type = SBVJ01Type(tp)
+	token.Type = SBVJType(tp)
 
 	switch token.Type {
 	case NIL:
@@ -164,11 +164,11 @@ func readBoolean(r *bufio.Reader) bool {
 	}
 }
 
-func readList(r *bufio.Reader) SBVJ01List {
-	sbvjList := SBVJ01List{}
+func readList(r *bufio.Reader) SBVJList {
+	sbvjList := SBVJList{}
 
 	size := readVarint(r)
-	sbvjList.Items = make([]SBVJ01Token, size)
+	sbvjList.Items = make([]SBVJToken, size)
 
 	var i int64
 	for i = 0; i < size; i++ {
@@ -179,17 +179,17 @@ func readList(r *bufio.Reader) SBVJ01List {
 	return sbvjList
 }
 
-func readMap(r *bufio.Reader) SBVJ01Map {
-	sbvjmap := SBVJ01Map{}
+func readMap(r *bufio.Reader) SBVJMap {
+	sbvjmap := SBVJMap{}
 
 	size := readVarint(r)
-	sbvjmap.Items = make([]SBVJ01Pair, size)
+	sbvjmap.Items = make([]SBVJPair, size)
 
 	var i int64
 	for i = 0; i < size; i++ {
 		key := readString(r)
 		value := readToken(r)
-		sbvjmap.Items[i] = SBVJ01Pair{key, value}
+		sbvjmap.Items[i] = SBVJPair{key, value}
 	}
 
 	return sbvjmap
