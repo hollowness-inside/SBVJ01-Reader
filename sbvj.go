@@ -2,6 +2,7 @@ package sbvj
 
 import (
 	"bufio"
+	"bytes"
 	"encoding/binary"
 	"fmt"
 	"io"
@@ -25,6 +26,11 @@ type SBVJ struct {
 	Versioned bool
 	Version   int32
 	Value     SBVJToken
+}
+
+func ReadBytes(buf []byte) SBVJ {
+	buffer := bytes.NewBuffer(buf)
+	return Read(buffer)
 }
 
 func ReadSBVJFile(path string) SBVJ {
