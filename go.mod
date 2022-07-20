@@ -1,3 +1,3 @@
-module joshua/green/starbound/sbvj01
+module joshua/green/starbound/sbvj
 
 go 1.18
