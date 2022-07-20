@@ -35,6 +35,10 @@ func ReadSBVJ01File(path string) SBVJ01 {
 	defer file.Close()
 
 	reader := bufio.NewReader(file)
+	return Read(reader)
+}
+
+func Read(reader *bufio.Reader) SBVJ01 {
 	magic := make([]byte, 6)
 	n, err := reader.Read(magic)
 	if err != nil {
