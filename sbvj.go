@@ -28,12 +28,12 @@ type SBVJ struct {
 	Value     SBVJObject
 }
 
-func ReadBytes(buf []byte) SBVJ {
+func ReadBytes(buf []byte) *SBVJ {
 	buffer := bytes.NewBuffer(buf)
 	return Read(buffer)
 }
 
-func ReadFile(path string) SBVJ {
+func ReadFile(path string) *SBVJ {
 	file, err := os.Open(path)
 	if err != nil {
 		panic(err)
@@ -43,7 +43,7 @@ func ReadFile(path string) SBVJ {
 	return Read(file)
 }
 
-func Read(r io.Reader) SBVJ {
+func Read(r io.Reader) *SBVJ {
 	reader := bufio.NewReader(r)
 
 	magic := make([]byte, 6)
@@ -70,7 +70,7 @@ func Read(r io.Reader) SBVJ {
 	}
 
 	sbvj.Value = readToken(reader)
-	return sbvj
+	return &sbvj
 }
 
 func readByte(r *bufio.Reader) byte {
