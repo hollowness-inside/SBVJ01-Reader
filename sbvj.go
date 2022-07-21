@@ -63,15 +63,14 @@ func Read(r io.Reader) (*SBVJ, error) {
 
 	sbvj.Name = name
 
-	versioned, err := readByte(reader)
+	versioned, err := readBoolean(reader)
 	if err != nil {
 		return nil, err
 	}
 
-	if versioned == 0 {
-		sbvj.Versioned = false
-	} else {
-		sbvj.Versioned = true
+	sbvj.Versioned = versioned
+
+	if versioned {
 		err := binary.Read(reader, binary.BigEndian, &sbvj.Version)
 		if err != nil {
 			return nil, err
