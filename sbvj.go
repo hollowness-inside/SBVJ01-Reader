@@ -69,7 +69,7 @@ func Read(r io.Reader) *SBVJ {
 		}
 	}
 
-	sbvj.Value = readToken(reader)
+	sbvj.Value = readObject(reader)
 	return &sbvj
 }
 
@@ -124,7 +124,7 @@ func readSignedVarint(r *bufio.Reader) int64 {
 	return v >> 1
 }
 
-func readToken(r *bufio.Reader) SBVJObject {
+func readObject(r *bufio.Reader) SBVJObject {
 	object := SBVJObject{}
 
 	tp := readByte(r)
@@ -178,7 +178,7 @@ func readList(r *bufio.Reader) SBVJList {
 
 	var i int64
 	for i = 0; i < size; i++ {
-		token := readToken(r)
+		token := readObject(r)
 		sbvjList.Items[i] = token
 	}
 
@@ -194,7 +194,7 @@ func readMap(r *bufio.Reader) SBVJMap {
 	var i int64
 	for i = 0; i < size; i++ {
 		key := readString(r)
-		value := readToken(r)
+		value := readObject(r)
 		sbvjmap.Items[i] = SBVJPair{key, value}
 	}
 
