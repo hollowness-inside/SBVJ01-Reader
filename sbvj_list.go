@@ -6,10 +6,10 @@ import (
 )
 
 type SBVJList struct {
-	Items []SBVJToken
+	Items []SBVJObject
 }
 
-func (l *SBVJList) Get(n int) *SBVJToken {
+func (l *SBVJList) Get(n int) *SBVJObject {
 	return &l.Items[n]
 }
 

@@ -4,7 +4,7 @@ import "fmt"
 
 type SBVJPair struct {
 	Key   string
-	Value SBVJToken
+	Value SBVJObject
 }
 
 func (p SBVJPair) String() string {

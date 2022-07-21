@@ -25,7 +25,7 @@ type SBVJ struct {
 	Name      string
 	Versioned bool
 	Version   int32
-	Value     SBVJToken
+	Value     SBVJObject
 }
 
 func ReadBytes(buf []byte) SBVJ {
@@ -124,32 +124,32 @@ func readSignedVarint(r *bufio.Reader) int64 {
 	return v >> 1
 }
 
-func readToken(r *bufio.Reader) SBVJToken {
-	token := SBVJToken{}
+func readToken(r *bufio.Reader) SBVJObject {
+	object := SBVJObject{}
 
 	tp := readByte(r)
-	token.Type = SBVJType(tp)
+	object.Type = SBVJType(tp)
 
-	switch token.Type {
+	switch object.Type {
 	case NIL:
-		token.Value = nil
+		object.Value = nil
 	case DOUBLE:
-		token.Value = readDouble(r)
+		object.Value = readDouble(r)
 	case BOOLEAN:
-		token.Value = readBoolean(r)
+		object.Value = readBoolean(r)
 	case VARINT:
-		token.Value = readSignedVarint(r)
+		object.Value = readSignedVarint(r)
 	case STRING:
-		token.Value = readString(r)
+		object.Value = readString(r)
 	case LIST:
-		token.Value = readList(r)
+		object.Value = readList(r)
 	case MAP:
-		token.Value = readMap(r)
+		object.Value = readMap(r)
 	default:
-		panic(fmt.Sprintf("Unknown token type %d", token.Type))
+		panic(fmt.Sprintf("Unknown token type %d", object.Type))
 	}
 
-	return token
+	return object
 }
 
 func readDouble(r *bufio.Reader) float64 {
@@ -174,7 +174,7 @@ func readList(r *bufio.Reader) SBVJList {
 	sbvjList := SBVJList{}
 
 	size := readVarint(r)
-	sbvjList.Items = make([]SBVJToken, size)
+	sbvjList.Items = make([]SBVJObject, size)
 
 	var i int64
 	for i = 0; i < size; i++ {

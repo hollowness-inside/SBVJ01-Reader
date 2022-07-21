@@ -9,7 +9,7 @@ type SBVJMap struct {
 	Items []SBVJPair
 }
 
-func (m *SBVJMap) Get(key string) *SBVJToken {
+func (m *SBVJMap) Get(key string) *SBVJObject {
 	for _, it := range m.Items {
 		if it.Key == key {
 			return &it.Value
