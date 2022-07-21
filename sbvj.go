@@ -33,7 +33,7 @@ func ReadBytes(buf []byte) SBVJ {
 	return Read(buffer)
 }
 
-func ReadSBVJFile(path string) SBVJ {
+func ReadFile(path string) SBVJ {
 	file, err := os.Open(path)
 	if err != nil {
 		panic(err)

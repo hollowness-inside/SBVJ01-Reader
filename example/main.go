@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	data := sbvj.ReadSBVJFile("file.player")
+	data := sbvj.ReadFile("file.player")
 
 	fmt.Println("Name:", data.Name)
 	fmt.Printf("Versioned (%t) = %d\n", data.Versioned, data.Version)
