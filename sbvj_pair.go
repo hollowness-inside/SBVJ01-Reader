@@ -7,6 +7,6 @@ type SBVJPair struct {
 	Value SBVJObject
 }
 
-func (p SBVJPair) String() string {
+func (p *SBVJPair) String() string {
 	return fmt.Sprintf(`"%s": %v`, p.Key, p.Value)
 }

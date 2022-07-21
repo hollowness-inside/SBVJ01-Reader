@@ -19,7 +19,7 @@ func (m *SBVJMap) Get(key string) *SBVJObject {
 	return nil
 }
 
-func (m SBVJMap) String() string {
+func (m *SBVJMap) String() string {
 	elements := make([]string, len(m.Items))
 
 	for i, v := range m.Items {

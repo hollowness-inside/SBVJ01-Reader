@@ -22,9 +22,11 @@ func (o SBVJObject) String() string {
 	case STRING:
 		return fmt.Sprintf(`"%s"`, o.Value.(string))
 	case LIST:
-		return o.Value.(SBVJList).String()
+		l := o.Value.(SBVJList)
+		return l.String()
 	case MAP:
-		return o.Value.(SBVJMap).String()
+		m := o.Value.(SBVJMap)
+		return m.String()
 	default:
 		return ""
 	}
