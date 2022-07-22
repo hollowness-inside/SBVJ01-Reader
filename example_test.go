@@ -15,7 +15,7 @@ func ExampleReadFile() {
 	fmt.Println("Name:", sbvj.Name)
 	fmt.Printf("Versioned (%t) = %d\n", sbvj.Versioned, sbvj.Version)
 
-	data := sbvj.Value.Value.(SBVJMap)
+	data := sbvj.Content.Value.(SBVJMap)
 
 	movCont := data.Get("movementController").Value.(SBVJMap)
 	facDir := movCont.Get("facingDirection").Value.(string)

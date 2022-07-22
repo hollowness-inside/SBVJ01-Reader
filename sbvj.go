@@ -24,7 +24,7 @@ type SBVJ struct {
 	Name      string
 	Versioned bool
 	Version   int32
-	Value     SBVJObject
+	Content   SBVJObject
 }
 
 func ReadBytes(buf []byte) (*SBVJ, error) {
@@ -80,7 +80,7 @@ func Read(r io.Reader) (*SBVJ, error) {
 		return nil, err
 	}
 
-	sbvj.Value = object
+	sbvj.Content = object
 	return &sbvj, nil
 }
 
