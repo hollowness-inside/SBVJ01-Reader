@@ -2,18 +2,18 @@ package sbvj
 
 import "fmt"
 
-type ErrWrongMagic struct {
+type ErrMagic struct {
 	magic []byte
 }
 
-type ErrUnknownObjectType struct {
+type ErrObjectType struct {
 	t SBVJType
 }
 
-func (e *ErrWrongMagic) Error() string {
+func (e *ErrMagic) Error() string {
 	return fmt.Sprintf("got wrong magic - expected SBVJ01, received %s", string(e.magic))
 }
 
-func (e *ErrUnknownObjectType) Error() string {
+func (e *ErrObjectType) Error() string {
 	return fmt.Sprintf("unknown object type (%s)", string(e.t))
 }

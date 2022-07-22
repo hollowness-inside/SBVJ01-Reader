@@ -51,7 +51,7 @@ func Read(r io.Reader) (*SBVJ, error) {
 	}
 
 	if string(magic) != "SBVJ01" {
-		return nil, &ErrWrongMagic{magic}
+		return nil, &ErrMagic{magic}
 	}
 
 	sbvj := SBVJ{}
@@ -195,7 +195,7 @@ func readObject(r *bufio.Reader) (SBVJObject, error) {
 	case MAP:
 		value, err = readMap(r)
 	default:
-		return SBVJObject{}, &ErrUnknownObjectType{object.Type}
+		return SBVJObject{}, &ErrObjectType{object.Type}
 	}
 
 	if err != nil {
