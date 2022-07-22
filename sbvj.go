@@ -46,8 +46,7 @@ func Read(r io.Reader) (*SBVJ, error) {
 	reader := bufio.NewReader(r)
 
 	magic := make([]byte, 6)
-	_, err := io.ReadFull(reader, magic)
-	if err != nil {
+	if _, err := io.ReadFull(reader, magic); err != nil {
 		return nil, err
 	}
 
@@ -71,8 +70,7 @@ func Read(r io.Reader) (*SBVJ, error) {
 	sbvj.Versioned = versioned
 
 	if versioned {
-		err := binary.Read(reader, binary.BigEndian, &sbvj.Version)
-		if err != nil {
+		if err := binary.Read(reader, binary.BigEndian, &sbvj.Version); err != nil {
 			return nil, err
 		}
 	}
@@ -95,15 +93,6 @@ func readByte(r *bufio.Reader) (byte, error) {
 	return b, nil
 }
 
-func readString(r *bufio.Reader) (string, error) {
-	bytes, err := readBytes(r)
-	if err != nil {
-		return "", err
-	}
-
-	return string(bytes), nil
-}
-
 func readBytes(r *bufio.Reader) ([]byte, error) {
 	size, err := readVarint(r)
 	if err != nil {
@@ -111,12 +100,21 @@ func readBytes(r *bufio.Reader) ([]byte, error) {
 	}
 
 	bytes := make([]byte, size)
-	_, err = io.ReadFull(r, bytes)
-	if err != nil {
+
+	if _, err = io.ReadFull(r, bytes); err != nil {
 		return nil, err
 	}
 
 	return bytes, nil
+}
+
+func readString(r *bufio.Reader) (string, error) {
+	bytes, err := readBytes(r)
+	if err != nil {
+		return "", err
+	}
+
+	return string(bytes), nil
 }
 
 func readVarint(r *bufio.Reader) (int64, error) {
@@ -135,7 +133,7 @@ func readVarint(r *bufio.Reader) (int64, error) {
 	}
 }
 
-func readSignedVarint(r *bufio.Reader) (int64, error) {
+func readUVarint(r *bufio.Reader) (int64, error) {
 	v, err := readVarint(r)
 	if err != nil {
 		return 0, err
@@ -146,6 +144,28 @@ func readSignedVarint(r *bufio.Reader) (int64, error) {
 	}
 
 	return v >> 1, nil
+}
+
+func readDouble(r *bufio.Reader) (float64, error) {
+	var val float64
+	if err := binary.Read(r, binary.LittleEndian, &val); err != nil {
+		return 0, nil
+	}
+
+	return val, nil
+}
+
+func readBoolean(r *bufio.Reader) (bool, error) {
+	b, err := readByte(r)
+	if err != nil {
+		return false, nil
+	}
+
+	if b == 0 {
+		return false, nil
+	} else {
+		return true, nil
+	}
 }
 
 func readObject(r *bufio.Reader) (SBVJObject, error) {
@@ -167,7 +187,7 @@ func readObject(r *bufio.Reader) (SBVJObject, error) {
 	case BOOLEAN:
 		value, err = readBoolean(r)
 	case VARINT:
-		value, err = readSignedVarint(r)
+		value, err = readUVarint(r)
 	case STRING:
 		value, err = readString(r)
 	case LIST:
@@ -184,29 +204,6 @@ func readObject(r *bufio.Reader) (SBVJObject, error) {
 	object.Value = value
 
 	return object, nil
-}
-
-func readDouble(r *bufio.Reader) (float64, error) {
-	var val float64
-	err := binary.Read(r, binary.LittleEndian, &val)
-	if err != nil {
-		return 0, nil
-	}
-
-	return val, nil
-}
-
-func readBoolean(r *bufio.Reader) (bool, error) {
-	b, err := readByte(r)
-	if err != nil {
-		return false, nil
-	}
-
-	if b == 0 {
-		return false, nil
-	} else {
-		return true, nil
-	}
 }
 
 func readList(r *bufio.Reader) (SBVJList, error) {
