@@ -15,18 +15,34 @@ type SBVJWriter struct {
 	*bufio.Writer
 }
 
-func NewWriter(w io.Writer, name string) (*SBVJWriter, error) {
+type SBVJOptions struct {
+	Name      string
+	Versioned bool
+	Version   int64
+}
+
+func NewWriter(w io.Writer, opt *SBVJOptions) (*SBVJWriter, error) {
 	writer := SBVJWriter{bufio.NewWriter(w)}
 	if _, err := writer.WriteString("SBVJ01"); err != nil {
 		return nil, err
 	}
 
-	if err := writer.writeVarint(int64(len(name))); err != nil {
+	if err := writer.writeVarint(int64(len(opt.Name))); err != nil {
 		return nil, err
 	}
 
-	if _, err := writer.WriteString(name); err != nil {
+	if _, err := writer.WriteString(opt.Name); err != nil {
 		return nil, err
+	}
+
+	if err := writer.PackBoolean(opt.Versioned); err != nil {
+		return nil, err
+	}
+
+	if opt.Versioned {
+		if err := writer.PackVarint(opt.Version); err != nil {
+			return nil, err
+		}
 	}
 
 	return &writer, nil
