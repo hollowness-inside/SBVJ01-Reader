@@ -24,3 +24,15 @@ func (w *SBVJWriter) PackDouble(d float64) error {
 
 	return binary.Write(w, binary.LittleEndian, d)
 }
+
+func (w *SBVJWriter) PackBoolean(b bool) error {
+	if err := w.WriteByte(byte(BOOLEAN)); err != nil {
+		return err
+	}
+
+	if b {
+		return w.WriteByte(1)
+	} else {
+		return w.WriteByte(0)
+	}
+}
