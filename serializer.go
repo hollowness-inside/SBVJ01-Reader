@@ -16,3 +16,11 @@ func NewWriter(w io.Writer) SBVJWriter {
 
 	return writer
 }
+
+func (w *SBVJWriter) PackDouble(d float64) error {
+	if err := w.WriteByte(byte(DOUBLE)); err != nil {
+		return err
+	}
+
+	return binary.Write(w, binary.LittleEndian, d)
+}
