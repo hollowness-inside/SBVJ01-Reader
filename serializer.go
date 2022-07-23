@@ -35,6 +35,11 @@ func (w *SBVJWriter) writeVarint(value int64) error {
 	}
 }
 
+func (w *SBVJWriter) PackNil() error {
+	err := w.WriteByte(byte(NIL))
+	return err
+}
+
 func (w *SBVJWriter) PackDouble(d float64) error {
 	if err := w.WriteByte(byte(DOUBLE)); err != nil {
 		return err
