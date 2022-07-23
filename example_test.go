@@ -64,8 +64,10 @@ func ExampleWrite() {
 
 		fmt.Println("Name:", sbvj.Name)
 		fmt.Printf("Versioned (%t) = %d\n", sbvj.Versioned, sbvj.Version)
+		fmt.Println(sbvj.Content.Value.(string))
 	}
 	// Output:
 	// Name: TestFile
 	// Versioned (true) = 1234
+	// Hello World
 }
