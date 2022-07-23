@@ -125,3 +125,30 @@ func (w *SBVJWriter) PackMap(m SBVJMap) error {
 
 	return nil
 }
+
+func (w *SBVJWriter) PackObject(o SBVJObject) (err error) {
+	switch o.Type {
+	case NIL:
+		w.PackNil()
+	case DOUBLE:
+		v := o.Value.(float64)
+		err = w.PackDouble(v)
+	case BOOLEAN:
+		v := o.Value.(bool)
+		err = w.PackBoolean(v)
+	case VARINT:
+		v := o.Value.(int64)
+		err = w.PackVarint(v)
+	case STRING:
+		v := o.Value.(string)
+		err = w.PackString(v)
+	case LIST:
+		v := o.Value.(SBVJList)
+		err = w.PackList(v)
+	case MAP:
+		v := o.Value.(SBVJMap)
+		err = w.PackMap(v)
+	}
+
+	return err
+}
