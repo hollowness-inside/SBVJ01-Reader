@@ -97,3 +97,26 @@ func (w *SBVJWriter) PackList(l SBVJList) error {
 
 	return nil
 }
+
+func (w *SBVJWriter) PackMap(m SBVJMap) error {
+	if err := w.WriteByte(byte(MAP)); err != nil {
+		return err
+	}
+
+	size := len(m.Items)
+	if err := w.writeVarint(int64(size)); err != nil {
+		return err
+	}
+
+	for _, pair := range m.Items {
+		if err := w.PackString(pair.Key); err != nil {
+			return err
+		}
+
+		if err := w.PackObject(pair.Value); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
