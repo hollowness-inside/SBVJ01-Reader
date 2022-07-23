@@ -62,3 +62,19 @@ func (w *SBVJWriter) writeVarint(value int64) error {
 		value >>= 7
 	}
 }
+
+func (w *SBVJWriter) PackString(s string) error {
+	if err := w.WriteByte(byte(STRING)); err != nil {
+		return err
+	}
+
+	if err := w.writeVarint(int64(len(s))); err != nil {
+		return err
+	}
+
+	if _, err := w.WriteString(s); err != nil {
+		return err
+	}
+
+	return nil
+}
