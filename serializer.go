@@ -18,7 +18,7 @@ type SBVJWriter struct {
 type SBVJOptions struct {
 	Name      string
 	Versioned bool
-	Version   int64
+	Version   int32
 }
 
 func NewWriter(w io.Writer, opt *SBVJOptions) (*SBVJWriter, error) {
@@ -27,7 +27,7 @@ func NewWriter(w io.Writer, opt *SBVJOptions) (*SBVJWriter, error) {
 		return nil, err
 	}
 
-	if err := writer.writeVarint(int64(len(opt.Name))); err != nil {
+	if err := writer.WriteVarint(int64(len(opt.Name))); err != nil {
 		return nil, err
 	}
 
@@ -35,12 +35,12 @@ func NewWriter(w io.Writer, opt *SBVJOptions) (*SBVJWriter, error) {
 		return nil, err
 	}
 
-	if err := writer.PackBoolean(opt.Versioned); err != nil {
+	if err := writer.WriteBoolean(opt.Versioned); err != nil {
 		return nil, err
 	}
 
 	if opt.Versioned {
-		if err := writer.PackVarint(opt.Version); err != nil {
+		if err := binary.Write(writer, binary.BigEndian, opt.Version); err != nil {
 			return nil, err
 		}
 	}
@@ -48,7 +48,7 @@ func NewWriter(w io.Writer, opt *SBVJOptions) (*SBVJWriter, error) {
 	return &writer, nil
 }
 
-func (w *SBVJWriter) writeVarint(value int64) error {
+func (w *SBVJWriter) WriteVarint(value int64) error {
 	for {
 		if (value & ^segmentBits) == 0 {
 			return w.WriteByte(byte(value))
@@ -58,6 +58,14 @@ func (w *SBVJWriter) writeVarint(value int64) error {
 			return err
 		}
 		value >>= 7
+	}
+}
+
+func (w *SBVJWriter) WriteBoolean(b bool) error {
+	if b {
+		return w.WriteByte(1)
+	} else {
+		return w.WriteByte(0)
 	}
 }
 
@@ -79,11 +87,7 @@ func (w *SBVJWriter) PackBoolean(b bool) error {
 		return err
 	}
 
-	if b {
-		return w.WriteByte(1)
-	} else {
-		return w.WriteByte(0)
-	}
+	return w.WriteBoolean(b)
 }
 
 func (w *SBVJWriter) PackVarint(value int64) error {
@@ -91,7 +95,7 @@ func (w *SBVJWriter) PackVarint(value int64) error {
 		return err
 	}
 
-	return w.writeVarint(value)
+	return w.WriteVarint(value)
 }
 
 func (w *SBVJWriter) PackString(s string) error {
@@ -99,7 +103,7 @@ func (w *SBVJWriter) PackString(s string) error {
 		return err
 	}
 
-	if err := w.writeVarint(int64(len(s))); err != nil {
+	if err := w.WriteVarint(int64(len(s))); err != nil {
 		return err
 	}
 
@@ -116,7 +120,7 @@ func (w *SBVJWriter) PackList(l SBVJList) error {
 	}
 
 	size := len(l.Items)
-	if err := w.writeVarint(int64(size)); err != nil {
+	if err := w.WriteVarint(int64(size)); err != nil {
 		return err
 	}
 
@@ -135,7 +139,7 @@ func (w *SBVJWriter) PackMap(m SBVJMap) error {
 	}
 
 	size := len(m.Items)
-	if err := w.writeVarint(int64(size)); err != nil {
+	if err := w.WriteVarint(int64(size)); err != nil {
 		return err
 	}
 
