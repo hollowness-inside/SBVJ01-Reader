@@ -78,3 +78,22 @@ func (w *SBVJWriter) PackString(s string) error {
 
 	return nil
 }
+
+func (w *SBVJWriter) PackList(l SBVJList) error {
+	if err := w.WriteByte(byte(LIST)); err != nil {
+		return err
+	}
+
+	size := len(l.Items)
+	if err := w.writeVarint(int64(size)); err != nil {
+		return err
+	}
+
+	for _, obj := range l.Items {
+		if err := w.PackObject(obj); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
