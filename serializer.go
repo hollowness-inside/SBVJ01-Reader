@@ -22,6 +22,14 @@ type SBVJOptions struct {
 }
 
 func NewWriter(w io.Writer, opt *SBVJOptions) (*SBVJWriter, error) {
+	if opt == nil {
+		opt = &SBVJOptions{
+			Name:      "",
+			Versioned: false,
+			Version:   0,
+		}
+	}
+
 	writer := SBVJWriter{bufio.NewWriter(w)}
 	if _, err := writer.WriteString("SBVJ01"); err != nil {
 		return nil, err
