@@ -6,6 +6,11 @@ import (
 	"io"
 )
 
+const (
+	segmentBits int64 = 0x7f
+	continueBit int64 = 0x80
+)
+
 type SBVJWriter struct {
 	*bufio.Writer
 }
@@ -34,5 +39,26 @@ func (w *SBVJWriter) PackBoolean(b bool) error {
 		return w.WriteByte(1)
 	} else {
 		return w.WriteByte(0)
+	}
+}
+
+func (w *SBVJWriter) PackVarint(value int64) error {
+	if err := w.WriteByte(byte(VARINT)); err != nil {
+		return err
+	}
+
+	return w.writeVarint(value)
+}
+
+func (w *SBVJWriter) writeVarint(value int64) error {
+	for {
+		if (value & ^segmentBits) == 0 {
+			return w.WriteByte(byte(value))
+		}
+
+		if err := w.WriteByte(byte((value & segmentBits) | continueBit)); err != nil {
+			return err
+		}
+		value >>= 7
 	}
 }
