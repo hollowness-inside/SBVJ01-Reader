@@ -15,11 +15,21 @@ type SBVJWriter struct {
 	*bufio.Writer
 }
 
-func NewWriter(w io.Writer) SBVJWriter {
+func NewWriter(w io.Writer, name string) (*SBVJWriter, error) {
 	writer := SBVJWriter{bufio.NewWriter(w)}
-	writer.WriteString("SBVJ01")
+	if _, err := writer.WriteString("SBVJ01"); err != nil {
+		return nil, err
+	}
 
-	return writer
+	if err := writer.writeVarint(int64(len(name))); err != nil {
+		return nil, err
+	}
+
+	if _, err := writer.WriteString(name); err != nil {
+		return nil, err
+	}
+
+	return &writer, nil
 }
 
 func (w *SBVJWriter) writeVarint(value int64) error {

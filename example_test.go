@@ -33,11 +33,18 @@ func ExampleWrite() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer file.Close()
 
-	wr := NewWriter(file)
+	wr, err := NewWriter(file, "TestFile")
+	if err != nil {
+		log.Fatal(err)
+	}
 	defer wr.Flush()
 
 	if err := wr.PackString("Hello World"); err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println("Done")
+	// Output: Done
 }
