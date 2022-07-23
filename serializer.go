@@ -22,6 +22,19 @@ func NewWriter(w io.Writer) SBVJWriter {
 	return writer
 }
 
+func (w *SBVJWriter) writeVarint(value int64) error {
+	for {
+		if (value & ^segmentBits) == 0 {
+			return w.WriteByte(byte(value))
+		}
+
+		if err := w.WriteByte(byte((value & segmentBits) | continueBit)); err != nil {
+			return err
+		}
+		value >>= 7
+	}
+}
+
 func (w *SBVJWriter) PackDouble(d float64) error {
 	if err := w.WriteByte(byte(DOUBLE)); err != nil {
 		return err
@@ -48,19 +61,6 @@ func (w *SBVJWriter) PackVarint(value int64) error {
 	}
 
 	return w.writeVarint(value)
-}
-
-func (w *SBVJWriter) writeVarint(value int64) error {
-	for {
-		if (value & ^segmentBits) == 0 {
-			return w.WriteByte(byte(value))
-		}
-
-		if err := w.WriteByte(byte((value & segmentBits) | continueBit)); err != nil {
-			return err
-		}
-		value >>= 7
-	}
 }
 
 func (w *SBVJWriter) PackString(s string) error {
