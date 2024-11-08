@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	sbvj, err := sbvj.ReadFile("testdata/file.player")
+	sbvj, err := sbvj.ReadFile("data/file.player")
 	if err != nil {
 		log.Fatal(err)
 	}

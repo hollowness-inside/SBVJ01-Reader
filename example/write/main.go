@@ -11,7 +11,7 @@ import (
 func main() {
 	// Writing
 	{
-		file, err := os.Create("testdata/output.sbvj")
+		file, err := os.Create("data/output.sbvj")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -37,7 +37,7 @@ func main() {
 
 	// Reading
 	{
-		sbvj, err := sbvj.ReadFile("testdata/output.sbvj")
+		sbvj, err := sbvj.ReadFile("data/output.sbvj")
 		if err != nil {
 			log.Fatal(err)
 		}
