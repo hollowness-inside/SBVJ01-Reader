@@ -4,10 +4,10 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/binary"
+	"fmt"
 	"io"
 	"os"
 
-	"github.com/hollowness-inside/SBVJ01-Reader/internal/errors"
 	"github.com/hollowness-inside/SBVJ01-Reader/pkg/types"
 )
 
@@ -35,7 +35,7 @@ func Read(r io.Reader) (*SBVJ, error) {
 	}
 
 	if string(magic) != "SBVJ01" {
-		return nil, errors.NewErrMagic(magic)
+		return nil, fmt.Errorf("wrong magic - expected SBVJ01, received %s", string(magic))
 	}
 
 	sbvj := SBVJ{}
@@ -179,7 +179,7 @@ func readObject(r *bufio.Reader) (types.SBVJObject, error) {
 	case types.MAP:
 		value, err = readMap(r)
 	default:
-		return types.SBVJObject{}, errors.NewErrObjectType(object.Type)
+		return types.SBVJObject{}, fmt.Errorf("unknown type: %d", object.Type)
 	}
 
 	if err != nil {
