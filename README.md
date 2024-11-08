@@ -1,5 +1,48 @@
 # SBVJ01-Reader
-Reads [**Starbound**](https://starbounder.org/Starbound) save files
+Reads and writes [**Starbound**](https://starbounder.org/Starbound) save files
 
-# Output
-> {"movementController": {"movingDirection": "right", "rotation": 0.000000, "crouching": false, "facingDirection": "right", "velocity": [0.000000 0.000000], "position": [0.000000 0.000000]}, "uuid": "bc240a5f8ffcbb1a20d70920821b8255", "modeType": "survival", "genericScriptStorage": {"bounty": {}, "stealing": {}}, "statusController": {"resourceValues": {"shieldStaminaRegenBlock": 0.000000, "breath": 0.000000, "energyRegenBlock": 0.000000, "health": 0.000000, "perfectBlockLimit": 0.000000, "damageAbsorption": 0.000000, "food": 0.000000, "energy": 0.000000, "shieldStamina": 0.000000, "perfectBlock": 0.000000}, "statusProperties": {"damageFlashOffDirectives": "multiply=ffffff00=0.85", "hitInvulnerabilityFlash": 0.000000, "hitInvulnerabilityTime": 2, "shieldHitInvulnerabilityTime": 0.000000, "mouthPosition": [0 0.000000], "ouchNoise": "/sfx/humanoid/hylotlhurt_male1.ogg", "bonusBeamGunRadius": 12, "hitInvulnerabilityThreshold": -0.000000, "breathHealthPenaltyPercentageRate": -0.000000, "damageFlashOnDirectives": "", "targetMaterialKind": "organic"}, "resourcesLocked": {"shieldStaminaRegenBlock": false, "breath": false, "energyRegenBlock": false, "health": false, "perfectBlockLimit": false, "damageAbsorption": false, "food": false, "energy": false, "shieldStamina": false, "perfectBlock": false}, "persistentEffectCategories": {"armor": [{"baseMultiplier": 0.000000, "stat": "powerMultiplier"} {"stat": "protection", "amount": 0.000000} {"stat": "maxEnergy", "amount": 0.000000} {"stat": "maxHealth", "amount": 0.000000} {"baseMultiplier": 0.000000, "stat": "powerMultiplier"} {"stat": "protection", "amount": 0.000000} {"stat": "maxEnergy", "amount": 0.000000} {"stat": "maxHealth", "amount": 0.000000} {"baseMultiplier": 0.000000, "stat": "powerMultiplier"} {"stat": "protection", "amount": 0.000000} {"stat": "maxEnergy", "amount": 0.000000} {"stat": "maxHealth", "amount": 0.000000}], "mechDeployment": [{"stat": "activeMovementAbilities", "amount": 0.000000}]}, "ephemeralEffects": []}, "description": "This guy seems to have nothing to say for himself.", "deployment": {"scriptStorage": {}}, "inventory": {"headSlot": {"id": "Item", "version": 16, "content": {"parameters": {}, "name": "hylotltier2head", "count": 2}}, "customBar": [[[{"location": 38, "type": "mainBag"} nil] [{"location": 22, "type": "mainBag"} {"location": 32, "type": "mainBag"}] [{"location": 20, "type": "mainBag"} {"location": 8, "type": "mainBag"}] [nil nil] [nil nil] [{"location": 36, "type": "mainBag"} nil]] [[{"location": 36, "type": "mainBag"} {"location": 34, "type": "mainBag"}] [{"location": 26, "type": "mainBag"} nil] [{"location": 16, "type": "objectBag"} nil] [nil nil] [nil nil] [nil nil]]], "customBarGroup": 0, "selectedActionBar": "beamaxe", "currencies": {"money": 64489220, "essence": 0}, "chestCosmeticSlot": {"id": "Item", "version": 16, "content": {"parameters": {}, "name": "spacesuitchest", "count": 2}}, "chestSlot": {"id": "Item", "version": 16, "content": {"parameters": {}, "name": "hylotltier2chest", "count": 2}}, "backCosmeticSlot": nil, "inspectionTool": {"id": "Item", "version": 16, "content": {"parameters": {}, "name": "scanmode", "count": 2}}, "backSlot": nil, "trashSlot": nil, "legsCosmeticSlot": nil, "legsSlot": {"id": "Item", "version": 16, "content": {"parameters": {}, "name": "hylotltier2pants", "count": 2}}, "itemBags": {"materialBag": [nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil], "objectBag": [{"id": "Item", "version": 16, "content": {"parameters": {}, "name": "techconsole", "count": 2}} {"id": "Item", "version": 16, "content": {"parameters": {}, "name": "box1", "count": 10}} {"id": "Item", "version": 16, "content": {"parameters": {}, "name": "woodstool", "count": 2}} {"id": "Item", "version": 16, "content": {"parameters": {}, "name": "colonydeed", "count": 20}} {"id": "Item", "version": 16, "content": {"parameters": {"foliageHueShift": 0.000000, "foliageName": "pinefoliage", "stemHueShift": 0.000000, "stemName": "pineytree", "scriptStorage": {}}, "name": "sapling", "count": 4}} {"id": "Item", "version": 16, "content": {"parameters": {}, "name": "tombstone3", "count": 2}} {"id": "Item", "version": 16, "content": {"parameters": {}, "name": "woodencrate2", "count": 4}} {"id": "Item", "version": 16, "content": {"parameters": {}, "name": "bunkercrate", "count": 2}} {"id": "Item", "version": 16, "content": {"parameters": {}, "name": "torch", "count": 124}} {"id": "Item", "version": 16, "content": {"parameters": {"foliageHueShift": 0.000000, "foliageName": "frumpy", "stemHueShift": 0.000000, "stemName": "spikey", "scriptStorage": {}}, "name": "sapling", "count": 4}} {"id": "Item", "version": 16, "content": {"parameters": {"foliageHueShift": 0.000000, "foliageName": "pinkflower", "stemHueShift": 0.000000, "stemName": "giantflower", "scriptStorage": {}}, "name": "sapling", "count": 2}} {"id": "Item", "version": 16, "content": {"parameters": {}, "name": "giantflowerchest", "count": 2}} {"id": "Item", "version": 16, "content": {"parameters": {"foliageHueShift": 0.000000, "foliageName": "nothing", "stemHueShift": 0.000000, "stemName": "bladetree", "scriptStorage": {}}, "name": "sapling", "count": 6}}
+
+# Example
+Check out [all the examples](https://github.com/hollowness-inside/SBVJ01-Reader/tree/main/examples)
+
+
+```go
+// Read from file
+sbvj, _ := sbvj.ReadFile("data/file.player")
+
+// File Options
+opts := sbvj.Options
+_filename := opts.Name
+_versioned := opts.Versioned
+_version := opts.Version
+
+// Content
+content := sbvj.Content.Value.(types.SBVJMap)
+movController := content["movementController"].Value.(types.SBVJMap)
+facDir := movController["facingDirection"].Value.(string)
+
+fmt.Println("Movement Controller:", movController)
+fmt.Println("Player facing direction:", facDir)
+```
+
+Output is the following
+```json
+Movement Controller: {"position": [0.000000, 0.000000], "movingDirection": "right", "rotation": 0.000000, "crouching": false, "facingDirection": "right", "velocity": [0.000000, 0.000000]}
+Player facing direction: right
+```
+
+# Converting to JSON
+```go
+// Read the file
+sbvj, _ := sbvj.ReadFile("data/file.player")
+
+// Extract the content
+content := sbvj.Content
+
+// Marshal to JSON
+jsoned, _ := json.Marshal(content)
+
+// Save the JSON
+output, _ := os.Create("data/output.json")
+output.Write(jsoned)
+```
