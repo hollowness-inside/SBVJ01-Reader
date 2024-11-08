@@ -26,7 +26,7 @@ fmt.Println("Player facing direction:", facDir)
 ```
 
 Output is the following
-```json
+```
 Movement Controller: {"position": [0.000000, 0.000000], "movingDirection": "right", "rotation": 0.000000, "crouching": false, "facingDirection": "right", "velocity": [0.000000, 0.000000]}
 Player facing direction: right
 ```
