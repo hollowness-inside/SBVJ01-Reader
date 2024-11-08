@@ -9,7 +9,7 @@ type SBVJObject struct {
 	Value any
 }
 
-func (o SBVJObject) String() string {
+func (o *SBVJObject) String() string {
 	switch o.Type {
 	case NIL:
 		return "null"

@@ -5,8 +5,6 @@ import (
 )
 
 type SBVJ struct {
-	Name      string
-	Versioned bool
-	Version   int32
-	Content   types.SBVJObject
+	Options SBVJOptions
+	Content types.SBVJObject
 }

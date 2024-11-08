@@ -14,18 +14,22 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Name:", sbvj.Name)
-	fmt.Printf("Versioned (%t) = %d\n", sbvj.Versioned, sbvj.Version)
+	// File Options
+	{
+		opts := sbvj.Options
 
-	data := sbvj.Content.Value.(types.SBVJMap)
+		fmt.Println("Name:", opts.Name)
+		fmt.Printf("Versioned (%t) = %d\n", opts.Versioned, opts.Version)
+	}
 
-	movCont := data.Get("movementController").Value.(types.SBVJMap)
-	facDir := movCont.Get("facingDirection").Value.(string)
+	// Content
+	{
+		content := sbvj.Content.Value.(types.SBVJMap)
 
-	fmt.Println("Player facing direction:", facDir)
+		movController := content.Get("movementController").Value.(types.SBVJMap)
+		facDir := movController.Get("facingDirection").Value.(string)
 
-	// Output:
-	// Name: PlayerEntity
-	// Versioned (true) = 31
-	// Player facing direction: right
+		fmt.Println("Movement Controller:", movController)
+		fmt.Println("Player facing direction:", facDir)
+	}
 }

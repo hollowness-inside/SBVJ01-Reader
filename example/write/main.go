@@ -42,8 +42,10 @@ func main() {
 			log.Fatal(err)
 		}
 
-		fmt.Println("Name:", sbvj.Name)
-		fmt.Printf("Versioned (%t) = %d\n", sbvj.Versioned, sbvj.Version)
+		opts := sbvj.Options
+		fmt.Println("Name:", opts.Name)
+		fmt.Printf("Versioned (%t) = %d\n", opts.Versioned, opts.Version)
+
 		fmt.Println(sbvj.Content.Value.(string))
 	}
 
