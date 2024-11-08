@@ -234,7 +234,7 @@ func readMap(r *bufio.Reader) (types.SBVJMap, error) {
 			return types.SBVJMap{}, err
 		}
 
-		sbvjmap.Items[i] = types.SBVJPair{key, value}
+		sbvjmap.Items[i] = types.SBVJPair{Key: key, Value: value}
 	}
 
 	return sbvjmap, nil
