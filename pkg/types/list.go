@@ -29,7 +29,7 @@ func (l *SBVJList) Cap() int {
 	return cap(l.Items)
 }
 
-func (l *SBVJList) String() string {
+func (l SBVJList) String() string {
 	strs := make([]string, len(l.Items))
 	for i, v := range l.Items {
 		strs[i] = v.String()

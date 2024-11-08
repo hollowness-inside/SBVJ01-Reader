@@ -18,7 +18,7 @@ func (m *SBVJMap) Set(key string, value SBVJObject) {
 	m.Items[key] = value
 }
 
-func (m *SBVJMap) String() string {
+func (m SBVJMap) String() string {
 	elements := make([]string, 0, len(m.Items))
 
 	for i, v := range m.Items {
