@@ -19,6 +19,17 @@ func (m *SBVJMap) Get(key string) *SBVJObject {
 	return nil
 }
 
+func (m *SBVJMap) Set(key string, value SBVJObject) {
+	for i, it := range m.Items {
+		if it.Key == key {
+			m.Items[i].Value = value
+			return
+		}
+	}
+
+	m.Items = append(m.Items, SBVJPair{Key: key, Value: value})
+}
+
 func (m *SBVJMap) String() string {
 	elements := make([]string, len(m.Items))
 
