@@ -6,35 +6,23 @@ import (
 )
 
 type SBVJMap struct {
-	Items []SBVJPair
+	Items map[string]SBVJObject
 }
 
 func (m *SBVJMap) Get(key string) *SBVJObject {
-	for _, it := range m.Items {
-		if it.Key == key {
-			return &it.Value
-		}
-	}
-
-	return nil
+	v := m.Items[key]
+	return &v
 }
 
 func (m *SBVJMap) Set(key string, value SBVJObject) {
-	for i, it := range m.Items {
-		if it.Key == key {
-			m.Items[i].Value = value
-			return
-		}
-	}
-
-	m.Items = append(m.Items, SBVJPair{Key: key, Value: value})
+	m.Items[key] = value
 }
 
 func (m *SBVJMap) String() string {
-	elements := make([]string, len(m.Items))
+	elements := make([]string, 0, len(m.Items))
 
 	for i, v := range m.Items {
-		elements[i] = v.String()
+		elements = append(elements, fmt.Sprintf(`"%s": %s`, i, v.String()))
 	}
 
 	return fmt.Sprintf("{%s}", strings.Join(elements, ", "))

@@ -153,12 +153,12 @@ func (w *SBVJWriter) PackMap(m types.SBVJMap) error {
 		return err
 	}
 
-	for _, pair := range m.Items {
-		if err := w.PackString(pair.Key); err != nil {
+	for key, value := range m.Items {
+		if err := w.PackString(key); err != nil {
 			return err
 		}
 
-		if err := w.PackObject(pair.Value); err != nil {
+		if err := w.PackObject(value); err != nil {
 			return err
 		}
 	}
