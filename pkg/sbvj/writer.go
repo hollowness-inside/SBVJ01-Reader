@@ -129,12 +129,12 @@ func (w *SBVJWriter) PackList(l types.SBVJList) error {
 		return err
 	}
 
-	size := len(l.Items)
+	size := len(l)
 	if err := w.WriteVarint(int64(size)); err != nil {
 		return err
 	}
 
-	for _, obj := range l.Items {
+	for _, obj := range l {
 		if err := w.PackObject(obj); err != nil {
 			return err
 		}
@@ -148,12 +148,12 @@ func (w *SBVJWriter) PackMap(m types.SBVJMap) error {
 		return err
 	}
 
-	size := len(m.Items)
+	size := len(m)
 	if err := w.WriteVarint(int64(size)); err != nil {
 		return err
 	}
 
-	for key, value := range m.Items {
+	for key, value := range m {
 		if err := w.PackString(key); err != nil {
 			return err
 		}

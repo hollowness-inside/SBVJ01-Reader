@@ -26,8 +26,8 @@ func main() {
 	{
 		content := sbvj.Content.Value.(types.SBVJMap)
 
-		movController := content.Get("movementController").Value.(types.SBVJMap)
-		facDir := movController.Get("facingDirection").Value.(string)
+		movController := content["movementController"].Value.(types.SBVJMap)
+		facDir := movController["facingDirection"].Value.(string)
 
 		fmt.Println("Movement Controller:", movController)
 		fmt.Println("Player facing direction:", facDir)

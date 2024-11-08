@@ -197,7 +197,7 @@ func readList(r *bufio.Reader) (types.SBVJList, error) {
 	if err != nil {
 		return types.SBVJList{}, err
 	}
-	sbvjList.Items = make([]types.SBVJObject, size)
+	sbvjList = make([]types.SBVJObject, size)
 
 	var i int64
 	for i = 0; i < size; i++ {
@@ -206,7 +206,7 @@ func readList(r *bufio.Reader) (types.SBVJList, error) {
 			return types.SBVJList{}, err
 		}
 
-		sbvjList.Items[i] = token
+		sbvjList[i] = token
 	}
 
 	return sbvjList, nil
@@ -220,7 +220,7 @@ func readMap(r *bufio.Reader) (types.SBVJMap, error) {
 		return types.SBVJMap{}, err
 	}
 
-	sbvjmap.Items = make(map[string]types.SBVJObject, size)
+	sbvjmap = make(map[string]types.SBVJObject, size)
 
 	var i int64
 	for i = 0; i < size; i++ {
@@ -234,7 +234,7 @@ func readMap(r *bufio.Reader) (types.SBVJMap, error) {
 			return types.SBVJMap{}, err
 		}
 
-		sbvjmap.Items[key] = value
+		sbvjmap[key] = value
 	}
 
 	return sbvjmap, nil
