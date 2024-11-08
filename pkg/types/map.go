@@ -1,4 +1,4 @@
-package sbvj
+package types
 
 import (
 	"fmt"

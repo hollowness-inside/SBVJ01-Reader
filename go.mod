@@ -1,3 +1,3 @@
-module joshua/green/starbound/sbvj
+module github.com/hollowness-inside/SBVJ01-Reader
 
-go 1.18
+go 1.22.2

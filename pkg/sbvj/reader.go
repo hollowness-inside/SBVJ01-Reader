@@ -6,26 +6,10 @@ import (
 	"encoding/binary"
 	"io"
 	"os"
+
+	"github.com/hollowness-inside/SBVJ01-Reader/internal/errors"
+	"github.com/hollowness-inside/SBVJ01-Reader/pkg/types"
 )
-
-type SBVJType byte
-
-const (
-	NIL     SBVJType = 0x01
-	DOUBLE  SBVJType = 0x02
-	BOOLEAN SBVJType = 0x03
-	VARINT  SBVJType = 0x04
-	STRING  SBVJType = 0x05
-	LIST    SBVJType = 0x06
-	MAP     SBVJType = 0x07
-)
-
-type SBVJ struct {
-	Name      string
-	Versioned bool
-	Version   int32
-	Content   SBVJObject
-}
 
 func ReadBytes(buf []byte) (*SBVJ, error) {
 	buffer := bytes.NewBuffer(buf)
@@ -51,7 +35,7 @@ func Read(r io.Reader) (*SBVJ, error) {
 	}
 
 	if string(magic) != "SBVJ01" {
-		return nil, &ErrMagic{magic}
+		return nil, errors.NewErrMagic(magic)
 	}
 
 	sbvj := SBVJ{}
@@ -168,58 +152,58 @@ func readBoolean(r *bufio.Reader) (bool, error) {
 	}
 }
 
-func readObject(r *bufio.Reader) (SBVJObject, error) {
-	object := SBVJObject{}
+func readObject(r *bufio.Reader) (types.SBVJObject, error) {
+	object := types.SBVJObject{}
 
 	tp, err := readByte(r)
 	if err != nil {
-		return SBVJObject{}, err
+		return types.SBVJObject{}, err
 	}
 
-	object.Type = SBVJType(tp)
+	object.Type = types.SBVJType(tp)
 
 	var value any
 	switch object.Type {
-	case NIL:
+	case types.NIL:
 		object.Value = nil
-	case DOUBLE:
+	case types.DOUBLE:
 		value, err = readDouble(r)
-	case BOOLEAN:
+	case types.BOOLEAN:
 		value, err = readBoolean(r)
-	case VARINT:
+	case types.VARINT:
 		value, err = readUVarint(r)
-	case STRING:
+	case types.STRING:
 		value, err = readString(r)
-	case LIST:
+	case types.LIST:
 		value, err = readList(r)
-	case MAP:
+	case types.MAP:
 		value, err = readMap(r)
 	default:
-		return SBVJObject{}, &ErrObjectType{object.Type}
+		return types.SBVJObject{}, errors.NewErrObjectType(object.Type)
 	}
 
 	if err != nil {
-		return SBVJObject{}, err
+		return types.SBVJObject{}, err
 	}
 	object.Value = value
 
 	return object, nil
 }
 
-func readList(r *bufio.Reader) (SBVJList, error) {
-	sbvjList := SBVJList{}
+func readList(r *bufio.Reader) (types.SBVJList, error) {
+	sbvjList := types.SBVJList{}
 
 	size, err := readVarint(r)
 	if err != nil {
-		return SBVJList{}, err
+		return types.SBVJList{}, err
 	}
-	sbvjList.Items = make([]SBVJObject, size)
+	sbvjList.Items = make([]types.SBVJObject, size)
 
 	var i int64
 	for i = 0; i < size; i++ {
 		token, err := readObject(r)
 		if err != nil {
-			return SBVJList{}, err
+			return types.SBVJList{}, err
 		}
 
 		sbvjList.Items[i] = token
@@ -228,29 +212,29 @@ func readList(r *bufio.Reader) (SBVJList, error) {
 	return sbvjList, nil
 }
 
-func readMap(r *bufio.Reader) (SBVJMap, error) {
-	sbvjmap := SBVJMap{}
+func readMap(r *bufio.Reader) (types.SBVJMap, error) {
+	sbvjmap := types.SBVJMap{}
 
 	size, err := readVarint(r)
 	if err != nil {
-		return SBVJMap{}, err
+		return types.SBVJMap{}, err
 	}
 
-	sbvjmap.Items = make([]SBVJPair, size)
+	sbvjmap.Items = make([]types.SBVJPair, size)
 
 	var i int64
 	for i = 0; i < size; i++ {
 		key, err := readString(r)
 		if err != nil {
-			return SBVJMap{}, err
+			return types.SBVJMap{}, err
 		}
 
 		value, err := readObject(r)
 		if err != nil {
-			return SBVJMap{}, err
+			return types.SBVJMap{}, err
 		}
 
-		sbvjmap.Items[i] = SBVJPair{key, value}
+		sbvjmap.Items[i] = types.SBVJPair{key, value}
 	}
 
 	return sbvjmap, nil

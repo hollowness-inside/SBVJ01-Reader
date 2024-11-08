@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"encoding/binary"
 	"io"
+
+	"github.com/hollowness-inside/SBVJ01-Reader/pkg/types"
 )
 
 const (
@@ -78,12 +80,12 @@ func (w *SBVJWriter) WriteBoolean(b bool) error {
 }
 
 func (w *SBVJWriter) PackNil() error {
-	err := w.WriteByte(byte(NIL))
+	err := w.WriteByte(byte(types.NIL))
 	return err
 }
 
 func (w *SBVJWriter) PackDouble(d float64) error {
-	if err := w.WriteByte(byte(DOUBLE)); err != nil {
+	if err := w.WriteByte(byte(types.DOUBLE)); err != nil {
 		return err
 	}
 
@@ -91,7 +93,7 @@ func (w *SBVJWriter) PackDouble(d float64) error {
 }
 
 func (w *SBVJWriter) PackBoolean(b bool) error {
-	if err := w.WriteByte(byte(BOOLEAN)); err != nil {
+	if err := w.WriteByte(byte(types.BOOLEAN)); err != nil {
 		return err
 	}
 
@@ -99,7 +101,7 @@ func (w *SBVJWriter) PackBoolean(b bool) error {
 }
 
 func (w *SBVJWriter) PackVarint(value int64) error {
-	if err := w.WriteByte(byte(VARINT)); err != nil {
+	if err := w.WriteByte(byte(types.VARINT)); err != nil {
 		return err
 	}
 
@@ -107,7 +109,7 @@ func (w *SBVJWriter) PackVarint(value int64) error {
 }
 
 func (w *SBVJWriter) PackString(s string) error {
-	if err := w.WriteByte(byte(STRING)); err != nil {
+	if err := w.WriteByte(byte(types.STRING)); err != nil {
 		return err
 	}
 
@@ -122,8 +124,8 @@ func (w *SBVJWriter) PackString(s string) error {
 	return nil
 }
 
-func (w *SBVJWriter) PackList(l SBVJList) error {
-	if err := w.WriteByte(byte(LIST)); err != nil {
+func (w *SBVJWriter) PackList(l types.SBVJList) error {
+	if err := w.WriteByte(byte(types.LIST)); err != nil {
 		return err
 	}
 
@@ -141,8 +143,8 @@ func (w *SBVJWriter) PackList(l SBVJList) error {
 	return nil
 }
 
-func (w *SBVJWriter) PackMap(m SBVJMap) error {
-	if err := w.WriteByte(byte(MAP)); err != nil {
+func (w *SBVJWriter) PackMap(m types.SBVJMap) error {
+	if err := w.WriteByte(byte(types.MAP)); err != nil {
 		return err
 	}
 
@@ -164,27 +166,27 @@ func (w *SBVJWriter) PackMap(m SBVJMap) error {
 	return nil
 }
 
-func (w *SBVJWriter) PackObject(o SBVJObject) (err error) {
+func (w *SBVJWriter) PackObject(o types.SBVJObject) (err error) {
 	switch o.Type {
-	case NIL:
+	case types.NIL:
 		w.PackNil()
-	case DOUBLE:
+	case types.DOUBLE:
 		v := o.Value.(float64)
 		err = w.PackDouble(v)
-	case BOOLEAN:
+	case types.BOOLEAN:
 		v := o.Value.(bool)
 		err = w.PackBoolean(v)
-	case VARINT:
+	case types.VARINT:
 		v := o.Value.(int64)
 		err = w.PackVarint(v)
-	case STRING:
+	case types.STRING:
 		v := o.Value.(string)
 		err = w.PackString(v)
-	case LIST:
-		v := o.Value.(SBVJList)
+	case types.LIST:
+		v := o.Value.(types.SBVJList)
 		err = w.PackList(v)
-	case MAP:
-		v := o.Value.(SBVJMap)
+	case types.MAP:
+		v := o.Value.(types.SBVJMap)
 		err = w.PackMap(v)
 	}
 

@@ -1,13 +1,16 @@
-package sbvj
+package main
 
 import (
 	"fmt"
 	"log"
 	"os"
+
+	"github.com/hollowness-inside/SBVJ01-Reader/pkg/sbvj"
+	"github.com/hollowness-inside/SBVJ01-Reader/pkg/types"
 )
 
 func ExampleReadFile() {
-	sbvj, err := ReadFile("testdata/file.player")
+	sbvj, err := sbvj.ReadFile("testdata/file.player")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -15,9 +18,9 @@ func ExampleReadFile() {
 	fmt.Println("Name:", sbvj.Name)
 	fmt.Printf("Versioned (%t) = %d\n", sbvj.Versioned, sbvj.Version)
 
-	data := sbvj.Content.Value.(SBVJMap)
+	data := sbvj.Content.Value.(types.SBVJMap)
 
-	movCont := data.Get("movementController").Value.(SBVJMap)
+	movCont := data.Get("movementController").Value.(types.SBVJMap)
 	facDir := movCont.Get("facingDirection").Value.(string)
 
 	fmt.Println("Player facing direction:", facDir)
@@ -37,13 +40,13 @@ func ExampleWrite() {
 		}
 		defer file.Close()
 
-		options := SBVJOptions{
+		options := sbvj.SBVJOptions{
 			Name:      "TestFile",
 			Versioned: true,
 			Version:   1234,
 		}
 
-		wr, err := NewWriter(file, &options)
+		wr, err := sbvj.NewWriter(file, &options)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -57,7 +60,7 @@ func ExampleWrite() {
 
 	// Reading
 	{
-		sbvj, err := ReadFile("testdata/output.sbvj")
+		sbvj, err := sbvj.ReadFile("testdata/output.sbvj")
 		if err != nil {
 			log.Fatal(err)
 		}
