@@ -50,7 +50,6 @@ func Read(r io.Reader) (*SBVJ, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	sbvj.Options.Versioned = versioned
 
 	if versioned {
@@ -155,12 +154,11 @@ func readBoolean(r *bufio.Reader) (bool, error) {
 func readObject(r *bufio.Reader) (types.SBVJObject, error) {
 	object := types.SBVJObject{}
 
-	tp, err := readByte(r)
+	typ, err := readByte(r)
 	if err != nil {
-		return types.SBVJObject{}, err
+		return object, err
 	}
-
-	object.Type = types.SBVJType(tp)
+	object.Type = types.SBVJType(typ)
 
 	var value any
 	switch object.Type {
@@ -179,11 +177,11 @@ func readObject(r *bufio.Reader) (types.SBVJObject, error) {
 	case types.MAP:
 		value, err = readMap(r)
 	default:
-		return types.SBVJObject{}, fmt.Errorf("unknown type: %d", object.Type)
+		return object, fmt.Errorf("unknown type: %d", object.Type)
 	}
 
 	if err != nil {
-		return types.SBVJObject{}, err
+		return object, err
 	}
 	object.Value = value
 
@@ -191,19 +189,18 @@ func readObject(r *bufio.Reader) (types.SBVJObject, error) {
 }
 
 func readList(r *bufio.Reader) (types.SBVJList, error) {
-	sbvjList := types.SBVJList{}
-
 	size, err := readVarint(r)
 	if err != nil {
-		return types.SBVJList{}, err
+		return nil, err
 	}
-	sbvjList = make([]types.SBVJObject, size)
+
+	sbvjList := make(types.SBVJList, size)
 
 	var i int64
 	for i = 0; i < size; i++ {
 		token, err := readObject(r)
 		if err != nil {
-			return types.SBVJList{}, err
+			return nil, err
 		}
 
 		sbvjList[i] = token
@@ -213,25 +210,23 @@ func readList(r *bufio.Reader) (types.SBVJList, error) {
 }
 
 func readMap(r *bufio.Reader) (types.SBVJMap, error) {
-	sbvjmap := types.SBVJMap{}
-
 	size, err := readVarint(r)
 	if err != nil {
-		return types.SBVJMap{}, err
+		return nil, err
 	}
 
-	sbvjmap = make(map[string]types.SBVJObject, size)
+	sbvjmap := make(types.SBVJMap, size)
 
 	var i int64
 	for i = 0; i < size; i++ {
 		key, err := readString(r)
 		if err != nil {
-			return types.SBVJMap{}, err
+			return nil, err
 		}
 
 		value, err := readObject(r)
 		if err != nil {
-			return types.SBVJMap{}, err
+			return nil, err
 		}
 
 		sbvjmap[key] = value
