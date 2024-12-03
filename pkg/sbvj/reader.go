@@ -34,16 +34,16 @@ func Read(r io.Reader) (*SBVJ, error) {
 		return nil, err
 	}
 
-	if string(magic) != "SBVJ01" {
+	if !bytes.Equal(magic, []byte("SBVJ01")) {
 		return nil, fmt.Errorf("wrong magic - expected SBVJ01, received %s", string(magic))
 	}
 
 	sbvj := SBVJ{}
+
 	name, err := readString(reader)
 	if err != nil {
 		return nil, err
 	}
-
 	sbvj.Options.Name = name
 
 	versioned, err := readBoolean(reader)
@@ -63,8 +63,8 @@ func Read(r io.Reader) (*SBVJ, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	sbvj.Content = object
+
 	return &sbvj, nil
 }
 
