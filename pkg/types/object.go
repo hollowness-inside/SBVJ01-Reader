@@ -2,6 +2,7 @@ package types
 
 import (
 	"fmt"
+	"strings"
 )
 
 type SBVJObject struct {
@@ -9,7 +10,7 @@ type SBVJObject struct {
 	Value any
 }
 
-func (o *SBVJObject) String() string {
+func (o SBVJObject) String() string {
 	switch o.Type {
 	case NIL:
 		return "null"
@@ -22,12 +23,30 @@ func (o *SBVJObject) String() string {
 	case STRING:
 		return fmt.Sprintf(`"%s"`, o.Value.(string))
 	case LIST:
-		l := o.Value.(SBVJList)
-		return l.String()
+		return formatList(o.Value.(SBVJList))
 	case MAP:
-		m := o.Value.(SBVJMap)
-		return m.String()
+		return formatMap(o.Value.(SBVJMap))
 	default:
 		return ""
 	}
+}
+
+func formatList(l SBVJList) string {
+	strs := make([]string, len(l))
+
+	for i, v := range l {
+		strs[i] = v.String()
+	}
+
+	return fmt.Sprintf("[%s]", strings.Join(strs, ", "))
+}
+
+func formatMap(m SBVJMap) string {
+	elements := make([]string, 0, len(m))
+
+	for key, value := range m {
+		elements = append(elements, fmt.Sprintf(`"%s": %s`, key, value.String()))
+	}
+
+	return fmt.Sprintf("{%s}", strings.Join(elements, ", "))
 }
